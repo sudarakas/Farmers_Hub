@@ -42,7 +42,7 @@ class Flash extends Component {
         ]).start();
 
         //after 3ms navigate to the login page
-        setTimeout(() => { this.navigateToLoginPage() }, 3000);
+        setTimeout(() => { this.navigateToLoginPage() }, 4000);
 
     }
 
@@ -51,10 +51,11 @@ class Flash extends Component {
             <View style={styles.mainContainer} >
                 <View style={styles.container}>
                     <Animated.View style={{
+                        //increase the opacity of the text
                         opacity: this.state.mainText.interpolate({
                             inputRange: [0, 1],
                             outputRange: [0, 1],
-                            extrapolate: 'clamp',
+                            extrapolate: "clamp",
                         }),
                     }}>
                         <Text style={styles.mainText}>FARMERS' HUB</Text>
@@ -65,6 +66,7 @@ class Flash extends Component {
     }
 }
 
+//styles for the components
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
