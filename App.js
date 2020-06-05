@@ -10,12 +10,14 @@ Navigation.registerComponent("farmersHub.Flash", () => Flash);
 Navigation.registerComponent("farmersHub.Home", () => Home);
 Navigation.registerComponent("farmersHub.AddItem", () => AddItem);
 
+//options for Flash Page
 Flash.options = {
     topBar: {
-        visible: false
+        visible: false //hide the Flash page top navigation bar
     }
 }
 
+//navigate the initial page to Flash Page (based on the  RNN documentation)
 export default () => Navigation.events().registerAppLaunchedListener(async () => {
     Navigation.setRoot({
         root: {
