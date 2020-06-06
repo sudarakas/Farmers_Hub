@@ -27,7 +27,9 @@ class Home extends Component {
     }
 
     showLoginForm = () => {
-        alert("fuck")
+        this.setState({
+            textAnimations: true
+        })
     }
 
     //action after component uncomunted
@@ -84,6 +86,7 @@ class Home extends Component {
                     </Animated.View>
 
                     <LoginFrom
+                        show={this.state.textAnimations}
                         orientation={this.state.orientation}
                     />
                 </View>
