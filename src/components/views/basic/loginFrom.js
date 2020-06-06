@@ -1,63 +1,94 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button, Animated } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
+
+import Input from '../../util/forms/input'
 
 class LoginForm extends Component {
 
     state = {
-        animationDone: false,
-        inputForm: new Animated.Value(0), //animation for form
-        signUpText: new Animated.Value(0) //animation for signup text 
+        hasErrors: false,
+        form: {
+            email: {
+                value: "",
+                valid: false,
+                type: "textinput",
+                rules: {
+                    isEmail: true
+                }
+            },
+            password: {
+                value: "",
+                valid: false,
+                type: "textinput",
+                rules: {
+                    minLength: 6
+                }
+            },
+            confirmPassword: {
+                value: "",
+                valid: false,
+                type: "textinput",
+                rules: {
+                    confirmPass: "password"
+                }
+            }
+        }
     }
 
-    //run the animation after the text animation done and login form animation is not completed
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.show && !this.state.animationDone) {
-            Animated.parallel([
-                Animated.timing(this.state.inputForm, {
-                    toValue: 1,
-                    duration: 500,
-                    useNativeDriver: true,
-                }),
-                Animated.timing(this.state.signUpText, {
-                    toValue: 1,
-                    duration: 1000,
-                    useNativeDriver: true,
-                })
-            ]).start(
-                this.setState({ animationDone: true })
-            )
-        }
+    updateInput = (name, value) => {
+        this.setState({
+            hasErrors: false
+        })
+
+        //to update the form after applying the logic       
+        let duplicateForm = this.state.form;
+        duplicateForm[name].value = value;
+
+        this.setState({
+            form:duplicateForm
+        })
+
     }
 
     render() {
         return (
             <View>
-                <Animated.View
-                    style={{
-                        opacity: this.state.inputForm
-                    }}
-                >
-                    <Text>Form</Text>
-                </Animated.View>
+                <Text style={styles.labelEmail}>Email ID</Text>
+                <Input
+                    placeholder="Enter your email"
+                    type={this.state.form.email.type}
+                    value={this.state.form.email.value}
+                    onChangeText={value => this.updateInput("email", value)}
+                    autoCapitalize={"none"}
+                    keyboardType={"email-address"}
+                />
 
-                <Animated.View
-                    style={{
-                        opacity: this.state.signUpText
-                    }}
-                >
-                    <Text>Sign up</Text>
-                </Animated.View>
+                <Text style={styles.labelPassword}>Password</Text>
+                <Input
+                    placeholder="Enter your password"
+                    type={this.state.form.password.type}
+                    value={this.state.form.password.value}
+                    onChangeText={value => this.updateInput("password", value)}
+                    secureTextEntry
+                />
             </View>
         )
     }
 }
 
-//styles for the components
 const styles = StyleSheet.create({
-    loginForm: {
-
+    labelEmail: {
+        marginHorizontal: 5,
+        fontFamily: "Montserrat-Regular",
+        color: "#A2A2A2",
+        marginTop: 10
+    },
+    labelPassword: {
+        marginHorizontal: 5,
+        fontFamily: "Montserrat-Regular",
+        color: "#A2A2A2",
+        marginTop: 15
     }
 })
-
 
 export default LoginForm;

@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Button, ScrollView, Animated, Easing } from 're
 
 import { getOrientation, setOrientationListener, removeOrientationListener } from '../../util/misc';
 
-import LoginFrom from "./loginFrom";
+import LoginPanel from "./loginPanel";
 
 class Home extends Component {
 
@@ -85,7 +85,7 @@ class Home extends Component {
                         <Text style={styles.accessText}>Login to access to Farmers’ Hub</Text>
                     </Animated.View>
 
-                    <LoginFrom
+                    <LoginPanel
                         show={this.state.textAnimations}
                         orientation={this.state.orientation}
                     />
