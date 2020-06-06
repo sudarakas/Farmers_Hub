@@ -1,5 +1,6 @@
 import { createStore, compose, applyMiddleware } from "redux";
 import promiseMiddleware from 'redux-promise';
+import Reducers from "./reducers";
 
 let reduxCompose = compose;
 
@@ -10,7 +11,7 @@ if (__DEV__) {
 
 //for the redux store
 const configureStore = () => {
-    return createStore(reduxCompose(applyMiddleware(promiseMiddleware)))
+    return createStore(Reducers, reduxCompose(applyMiddleware(promiseMiddleware)))
 }
 
 export default configureStore;
