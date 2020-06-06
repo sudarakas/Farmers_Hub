@@ -1,30 +1,35 @@
 import { Navigation } from 'react-native-navigation';
+import configureStore from "./src/components/store/config";
+import { Provider } from "react-redux";
+
 
 //import the pages for adding in navigation
-import Flash from './src/components/views/basic';
+import Flash from './src/components/views/basic/index';
 import Login from './src/components/views/basic/login';
 import Home from './src/components/views/home';
 import AddItem from "./src/components/views/auth/addItem";
 
-//register components in RNN system
-Navigation.registerComponent("farmersHub.Flash", () => Flash);
-Navigation.registerComponent("farmersHub.Login", () => Login);
 
-Navigation.registerComponent("farmersHub.Home", () => Home);
+//create the store
+const store = configureStore();
 
-Navigation.registerComponent("farmersHub.AddItem", () => AddItem);
+//register components in RNN system with redux
+Navigation.registerComponentWithRedux("farmersHub.Flash", () => Flash, Provider, store);
+Navigation.registerComponentWithRedux("farmersHub.Login", () => Login, Provider, store);
+Navigation.registerComponentWithRedux("farmersHub.Home", () => Home, Provider, store);
+Navigation.registerComponentWithRedux("farmersHub.AddItem", () => AddItem, Provider, store);
 
 //options for Flash Page
 Home.options = {
     topBar: {
         title: {
-          text: 'Home',
-          color: '#000000',
-          alignment: 'center',
-          fontFamily: 'Montserrat-Black'
+            text: 'Home',
+            color: '#000000',
+            alignment: 'center',
+            fontFamily: 'Montserrat-Black'
         },
         background: {
-          color: '#ffffff'
+            color: '#ffffff'
         },
         elevation: 0,
     },
