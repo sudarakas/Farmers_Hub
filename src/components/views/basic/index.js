@@ -1,12 +1,32 @@
 import { Navigation } from 'react-native-navigation';
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Animated, Button } from 'react-native';
+import { StyleSheet, View, Text, Animated, ScrollView } from 'react-native';
+
+import { getOrientation, setOrientationListener, removeOrientationListener } from '../../util/misc';
+
 
 class Flash extends Component {
 
-    //create the states for the animations
-    state = {
-        mainText: new Animated.Value(0), //animation for the text (farmers hub)
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            orientation: getOrientation(500),
+            mainText: new Animated.Value(0) //animation for the text (farmers hub)
+        }
+
+        setOrientationListener(this.changeOrientation)
+    }
+
+    changeOrientation = () => {
+        this.setState({
+            orientation: getOrientation(500)
+        })
+    }
+
+    //action after component uncomunted
+    componentWillUnmount() {
+        removeOrientationListener()
     }
 
     //navigate to the login page
@@ -22,7 +42,7 @@ class Flash extends Component {
                                     from: 0,
                                     to: 1,
                                     duration: 500
-                                  }
+                                }
                             }
                         }
                     },
@@ -48,20 +68,26 @@ class Flash extends Component {
 
     render() {
         return (
-            <View style={styles.mainContainer} >
-                <View style={styles.container}>
-                    <Animated.View style={{
-                        //increase the opacity of the text
-                        opacity: this.state.mainText.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0, 1],
-                            extrapolate: "clamp",
-                        }),
-                    }}>
-                        <Text style={styles.mainText}>FARMERS' HUB</Text>
-                    </Animated.View>
+            <ScrollView contentContainerStyle={{ flex: 1 }}>
+                <View style={styles.mainContainer} >
+                    <View style={styles.container}>
+                        <Animated.View style={{
+                            //increase the opacity of the text
+                            opacity: this.state.mainText.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [0, 1],
+                                extrapolate: "clamp",
+                            }),
+                        }}>
+                            <Text style={
+                                this.state.orientation === 'portrait'   //specify the styles for the orientation
+                                ? styles.mainTextPortrait
+                                : styles.mainTextLandscape
+                            }>FARMERS' HUB</Text>
+                        </Animated.View>
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
@@ -73,8 +99,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#5EB14E',
     },
-    mainText: {
+    mainTextPortrait: {
         fontSize: 60,
+        color: "#ffffff",
+        fontFamily: "Montserrat-Black",
+        marginHorizontal: 20,
+    },
+    mainTextLandscape: {
+        fontSize: 100,
         color: "#ffffff",
         fontFamily: "Montserrat-Black",
         marginHorizontal: 20,

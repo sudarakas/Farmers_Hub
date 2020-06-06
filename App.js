@@ -46,8 +46,11 @@ Flash.options = {
 //options for Login Page
 Login.options = {
     topBar: {
-        visible: false //hide the Flash page top navigation bar
-    }
+        background: {
+            color: '#ffffff'
+        },
+        elevation: 0,
+    },
 }
 
 //navigate the initial page to Flash Page (based on the  RNN documentation)
