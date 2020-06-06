@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Animated, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Animated, ScrollView, Easing } from 'react-native';
 
 import { getOrientation, setOrientationListener, removeOrientationListener } from '../../util/misc';
 
@@ -58,6 +58,7 @@ class Flash extends Component {
                 toValue: 1,
                 duration: 1000,
                 useNativeDriver: true,
+                easing: Easing.easeOutCubic
             })
         ]).start();
 
@@ -81,8 +82,8 @@ class Flash extends Component {
                         }}>
                             <Text style={
                                 this.state.orientation === 'portrait'   //specify the styles for the orientation
-                                ? styles.mainTextPortrait
-                                : styles.mainTextLandscape
+                                    ? styles.mainTextPortrait
+                                    : styles.mainTextLandscape
                             }>FARMERS' HUB</Text>
                         </Animated.View>
                     </View>
