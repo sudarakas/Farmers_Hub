@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
-import Input from '../../util/forms/input'
+import Input from '../../util/forms/input';
+import Validation from '../../util/forms/validation';
+import LoadTabs from '../tabs';
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { signUp } from '../../store/actions/user_actions';
 
 class LoginForm extends Component {
     _isMounted = false;
@@ -18,6 +24,7 @@ class LoginForm extends Component {
                 valid: false,
                 type: "textinput",
                 rules: {
+                    isRequired: true,
                     isEmail: true
                 }
             },
@@ -26,6 +33,7 @@ class LoginForm extends Component {
                 valid: false,
                 type: "textinput",
                 rules: {
+                    isRequired: true,
                     minLength: 6
                 }
             },
@@ -40,7 +48,7 @@ class LoginForm extends Component {
         }
     }
 
-    componentDidMount() {
+    componentDidUpdate() {
         this._isMounted = true;
     }
 
@@ -52,6 +60,13 @@ class LoginForm extends Component {
         //to update the form after applying the logic       
         let duplicateForm = this.state.form;
         duplicateForm[name].value = value;
+
+
+        //validate the rules
+        let rules = duplicateForm[name].rules
+        let valid = Validation(value, rules, duplicateForm);
+
+        duplicateForm[name].valid = valid;
 
         this.setState({
             form: duplicateForm
@@ -85,25 +100,80 @@ class LoginForm extends Component {
         }
     }
 
+    //show form errors
+    showFormErrors = () => {
+        if (this.state.hasErrors) {
+            return <View style={styles.errorContainer}>
+                <Text style={styles.errorMessage}> Oops! Please check your inputs.</Text>
+            </View>
+        } else {
+            return null
+        }
+
+    }
+
     //update the form type
     changeFormType = () => {
-        if (this._isMounted) {
-            const type = this.state.type;
-            this.setState({
-                type: type === 'Login' ? 'Register' : 'Login',
-                action: type === 'Login' ? 'SIGN UP' : 'SIGN IN',
-                actionType: type === 'Login' ? "Already have an account?" : "Don't have an account? Sign Up",
-                infoText: type === 'Login' ? "By creating an account, you are agreeing to our Terms and Conditions" : "Continue to Farmers' Hub",
-            })
-            const returnType = this.state.type === 'Login' ? 'Register' : 'Login';
-            //update the parent page
-            this.props.onChangeChildPageType(returnType);
-        }
+
+        const type = this.state.type;
+        this.setState({
+            type: type === 'Login' ? 'Register' : 'Login',
+            action: type === 'Login' ? 'SIGN UP' : 'SIGN IN',
+            actionType: type === 'Login' ? "Already have an account?" : "Don't have an account? Sign Up",
+            infoText: type === 'Login' ? "By creating an account, you are agreeing to our Terms and Conditions" : "Continue to Farmers' Hub",
+        })
+        const returnType = this.state.type === 'Login' ? 'Register' : 'Login';
+        //update the parent page
+        this.props.onChangeChildPageType(returnType);
+
 
     }
 
     componentWillUnmount() {
         this._isMounted = false;
+    }
+
+    //submit the form
+    submitUserForm = () => {
+        let isValidForm = true;
+        let submitForm = {};
+        const duplicateForm = this.state.form;
+
+        for (let key in duplicateForm) {
+
+            //for login form
+            if (this.state.type === 'Login') {
+                if (key !== 'confirmPassword') {
+                    //check the input filed is valid or not
+                    isValidForm = isValidForm && duplicateForm[key].valid;
+                    submitForm[key] = duplicateForm[key].value;
+                }
+            }
+            //for register form
+            else {
+                //check the input filed is valid or not
+                isValidForm = isValidForm && duplicateForm[key].valid;
+                submitForm[key] = duplicateForm[key].value;
+            }
+        }
+
+        //submit the form to firebase
+        if (isValidForm) {
+            this.state.type === 'Login' ?
+                LoadTabs()
+                :
+                this.props.signUp(submitForm).then(() => {
+                    console.log('success')
+                })
+        } else {
+            this.setState({
+                hasErrors: true
+            })
+        }
+    }
+
+    navigateToHome = () => {
+        this.state.type === 'Login' ? LoadTabs() : null
     }
 
     render() {
@@ -131,11 +201,13 @@ class LoginForm extends Component {
                 {/* render element on regitser page */}
                 {this.confirmPassword()}
 
+                {/* display the error */}
+                {this.showFormErrors()}
 
                 <View>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => alert('sign in')}
+                        onPress={this.submitUserForm}
                     >
                         <Text style={styles.buttonText}>{this.state.action}</Text>
                     </TouchableOpacity>
@@ -151,7 +223,7 @@ class LoginForm extends Component {
 
                     <Text
                         style={styles.continueText}
-                        onPress={() => alert("regitser")}
+                        onPress={this.navigateToHome}
                     >
                         {this.state.infoText}
                     </Text>
@@ -194,7 +266,7 @@ const styles = StyleSheet.create({
     button: {
         alignItems: "center",
         backgroundColor: "#5EB14E",
-        marginTop: 20,
+        marginTop: 15,
         paddingVertical: 22,
         borderRadius: 10,
     },
@@ -216,7 +288,27 @@ const styles = StyleSheet.create({
         fontFamily: "Montserrat-Regular",
         fontSize: 15,
         color: "#5EB14E"
+    },
+    errorContainer: {
+        marginTop: 10,
+    },
+    errorMessage: {
+        textAlign: "center",
+        fontFamily: "Montserrat-Bold",
+        fontSize: 15,
+        color: "#E0002F"
     }
 })
 
-export default LoginForm;
+function mapStateToProps(state) {
+    return {
+        User: state.user
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ signUp }, dispatch)
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

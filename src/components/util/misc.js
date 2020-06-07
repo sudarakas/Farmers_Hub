@@ -15,6 +15,7 @@ export const removeOrientationListener = () => {
     return Dimensions.removeEventListener("change")
 }
 
+//get the platform of the device
 export const getPlatform = () => {
     if (Platform.OS == 'ios') {
         return "iso"
@@ -22,3 +23,8 @@ export const getPlatform = () => {
         return "android"
     }
 }
+
+//firebase authentication
+export const APIKEY = `AIzaSyA89OZJuk8YYHt1Y26bgNrMRhapKnRnEu4`
+export const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${APIKEY}`
+export const SIGNIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${APIKEY}`
