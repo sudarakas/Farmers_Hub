@@ -5,22 +5,22 @@ import LoginForm from './loginFrom';
 
 class LoginPanel extends Component {
 
+    constructor(props){
+        super(props);
+
+        this.onChangePageType = this.onChangePageType.bind(this);
+    }
     state = {
         animationDone: false,
         inputForm: new Animated.Value(0), //animation for form
-        signUpText: new Animated.Value(0) //animation for signup text 
     }
+    
 
     //run the animation after the text animation done and login form animation is not completed
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.show && !this.state.animationDone) {
             Animated.parallel([
                 Animated.timing(this.state.inputForm, {
-                    toValue: 1,
-                    duration: 500,
-                    useNativeDriver: true,
-                }),
-                Animated.timing(this.state.signUpText, {
                     toValue: 1,
                     duration: 1000,
                     useNativeDriver: true,
@@ -31,6 +31,10 @@ class LoginPanel extends Component {
         }
     }
 
+    onChangePageType(type){
+        this.props.onChangePageType(type);
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -39,15 +43,9 @@ class LoginPanel extends Component {
                         opacity: this.state.inputForm
                     }}
                 >
-                    <LoginForm />
-                </Animated.View>
-
-                <Animated.View
-                    style={{
-                        opacity: this.state.signUpText
-                    }}
-                >
-                    <Text>Sign up</Text>
+                    <LoginForm 
+                        onChangeChildPageType={this.onChangePageType}
+                    />
                 </Animated.View>
             </View>
         )
@@ -56,7 +54,7 @@ class LoginPanel extends Component {
 
 //styles for the components
 const styles = StyleSheet.create({
-    container:{
+    container: {
         marginTop: 40
     }
 })

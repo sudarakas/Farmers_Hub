@@ -1,4 +1,4 @@
-import { Dimensions } from "react-native";
+import { Dimensions, Platform } from "react-native";
 
 //get the current orientation of the screen
 export const getOrientation = (value) => {
@@ -13,4 +13,12 @@ export const setOrientationListener = (callback) => {
 //remove the eventLister after the component removed from the screen
 export const removeOrientationListener = () => {
     return Dimensions.removeEventListener("change")
+}
+
+export const getPlatform = () => {
+    if (Platform.OS == 'ios') {
+        return "iso"
+    } else {
+        return "android"
+    }
 }

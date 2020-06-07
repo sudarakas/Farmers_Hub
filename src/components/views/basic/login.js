@@ -15,14 +15,31 @@ class Home extends Component {
             topicText: new Animated.Value(0), //animation for the topic text (welcome back)
             accessText: new Animated.Value(0), //animation for the accessText text (login access..)
             textAnimations: false,
+
+            pageType: "Login",
+            firstTitleText: "Welcome",
+            secondTitleText: "Back!",
+            subTitleText: "Login to access the Farmers’ Hub",
+
         }
 
+        this.onChangeType = this.onChangeType.bind(this);
         setOrientationListener(this.changeOrientation)
     }
 
     changeOrientation = () => {
         this.setState({
             orientation: getOrientation(500)
+        })
+    }
+
+    onChangeType(type) {
+        const pageType = type;
+        this.setState({
+            pageType: pageType === 'Login' ? 'Register' : 'Login',
+            firstTitleText: pageType === 'Login' ? 'Create New' : 'Welcome',
+            secondTitleText: pageType === 'Login' ? 'Account' : 'Back!',
+            subTitleText: pageType === 'Login' ? 'Please fill all the details to create a new account' : 'Login to access the Farmers’ Hub',
         })
     }
 
@@ -69,8 +86,8 @@ class Home extends Component {
                         }),
                     }}>
                         <View style={styles.topicText}>
-                            <Text style={styles.welcomeText}>Welcome</Text>
-                            <Text style={styles.backText}>Back!</Text>
+                            <Text style={styles.welcomeText}>{this.state.firstTitleText}</Text>
+                            <Text style={styles.backText}>{this.state.secondTitleText}</Text>
                         </View>
                     </Animated.View>
 
@@ -82,11 +99,12 @@ class Home extends Component {
                             extrapolate: "clamp",
                         }),
                     }}>
-                        <Text style={styles.accessText}>Login to access to Farmers’ Hub</Text>
+                        <Text style={styles.accessText}>{this.state.subTitleText}</Text>
                     </Animated.View>
 
                     <LoginPanel
                         show={this.state.textAnimations}
+                        onChangePageType={this.onChangeType}
                         orientation={this.state.orientation}
                     />
                 </View>
@@ -118,7 +136,7 @@ const styles = StyleSheet.create({
         marginTop: -15  //bad
     },
     accessText: {
-        fontSize: 20,
+        fontSize: 15,
         color: "#A2A2A2",
         fontFamily: "Montserrat-Regular",
     }
