@@ -4,8 +4,8 @@ import { StyleSheet, View, Text, Button, Animated } from 'react-native';
 import LoginForm from './loginFrom';
 
 class LoginPanel extends Component {
-
-    constructor(props){
+    _isMounted = false;
+    constructor(props) {
         super(props);
 
         this.onChangePageType = this.onChangePageType.bind(this);
@@ -14,7 +14,10 @@ class LoginPanel extends Component {
         animationDone: false,
         inputForm: new Animated.Value(0), //animation for form
     }
-    
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
 
     //run the animation after the text animation done and login form animation is not completed
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -31,8 +34,14 @@ class LoginPanel extends Component {
         }
     }
 
-    onChangePageType(type){
-        this.props.onChangePageType(type);
+    onChangePageType = (type) => {
+        if (this._isMounted) {
+            this.props.onChangePageType(type);
+        }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
@@ -43,7 +52,7 @@ class LoginPanel extends Component {
                         opacity: this.state.inputForm
                     }}
                 >
-                    <LoginForm 
+                    <LoginForm
                         onChangeChildPageType={this.onChangePageType}
                     />
                 </Animated.View>
@@ -55,7 +64,7 @@ class LoginPanel extends Component {
 //styles for the components
 const styles = StyleSheet.create({
     container: {
-        marginTop: 40
+        marginTop: 30
     }
 })
 

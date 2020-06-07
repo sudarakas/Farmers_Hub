@@ -6,7 +6,7 @@ import { getOrientation, setOrientationListener, removeOrientationListener } fro
 import LoginPanel from "./loginPanel";
 
 class Home extends Component {
-
+    _isMounted = false;
     constructor(props) {
         super(props)
 
@@ -32,17 +32,17 @@ class Home extends Component {
             orientation: getOrientation(500)
         })
     }
-
-    onChangeType(type) {
+    
+    onChangeType = (type) => {
         const pageType = type;
         this.setState({
-            pageType: pageType === 'Login' ? 'Register' : 'Login',
-            firstTitleText: pageType === 'Login' ? 'Create New' : 'Welcome',
-            secondTitleText: pageType === 'Login' ? 'Account' : 'Back!',
-            subTitleText: pageType === 'Login' ? 'Please fill all the details to create a new account' : 'Login to access the Farmers’ Hub',
+            pageType: pageType === 'Register' ? 'Register' : 'Login',
+            firstTitleText: pageType === 'Register' ? 'Create New' : 'Welcome',
+            secondTitleText: pageType === 'Register' ? 'Account' : 'Back!',
+            subTitleText: pageType === 'Register' ? 'Please fill all the details to create a new account' : 'Login to access the Farmers’ Hub',
         })
     }
-
+    
     showLoginForm = () => {
         this.setState({
             textAnimations: true
@@ -50,8 +50,9 @@ class Home extends Component {
     }
 
     //action after component uncomunted
-    componentWillUnmount() {
+    UNSAFE_componentWillUnmount() {
         removeOrientationListener()
+        this._isMounted = false;
     }
 
     componentDidMount() {

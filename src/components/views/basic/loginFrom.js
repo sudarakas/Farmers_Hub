@@ -4,6 +4,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Input from '../../util/forms/input'
 
 class LoginForm extends Component {
+    _isMounted = false;
 
     state = {
         type: 'Login',
@@ -39,6 +40,10 @@ class LoginForm extends Component {
         }
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
     updateInput = (name, value) => {
         this.setState({
             hasErrors: false
@@ -54,15 +59,51 @@ class LoginForm extends Component {
 
     }
 
+    forgotPassword = () => {
+        if (this.state.type != 'Register') {
+            return
+
+        } else {
+            return null;
+        }
+    }
+
+    confirmPassword = () => {
+        if (this.state.type != 'Login') {
+            return <View>
+                <Text style={styles.labelConfirmPassword}>Confirm Password</Text>
+                <Input
+                    placeholder="Confirm your password"
+                    type={this.state.form.confirmPassword.type}
+                    value={this.state.form.confirmPassword.value}
+                    onChangeText={value => this.updateInput("confirmPassword", value)}
+                    secureTextEntry
+                />
+            </View>
+        } else {
+            return <Text style={styles.forgotPassword}>Forgot Password?</Text>
+        }
+    }
+
+    //update the form type
     changeFormType = () => {
-        const type = this.state.type;
-        this.setState({
-            type: type === 'Login' ? 'Register' : 'Login',
-            action: type === 'Login' ? 'SIGN UP' : 'SIGN IN',
-            actionType: type === 'Login' ? "Already have an account?" : "Don't have an account? Sign Up",
-            infoText: type === 'Login' ? "By creating an account, you are agreeing to our Terms and Conditions" : "Continue to Farmers' Hub",
-        })
-        this.props.onChangeChildPageType(this.state.type);
+        if (this._isMounted) {
+            const type = this.state.type;
+            this.setState({
+                type: type === 'Login' ? 'Register' : 'Login',
+                action: type === 'Login' ? 'SIGN UP' : 'SIGN IN',
+                actionType: type === 'Login' ? "Already have an account?" : "Don't have an account? Sign Up",
+                infoText: type === 'Login' ? "By creating an account, you are agreeing to our Terms and Conditions" : "Continue to Farmers' Hub",
+            })
+            const returnType = this.state.type === 'Login' ? 'Register' : 'Login';
+            //update the parent page
+            this.props.onChangeChildPageType(returnType);
+        }
+
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
@@ -87,7 +128,9 @@ class LoginForm extends Component {
                     secureTextEntry
                 />
 
-                <Text style={styles.forgotPassword}>Forgot Password?</Text>
+                {/* render element on regitser page */}
+                {this.confirmPassword()}
+
 
                 <View>
                     <TouchableOpacity
@@ -135,16 +178,23 @@ const styles = StyleSheet.create({
         color: "#A2A2A2",
         marginTop: 15
     },
+    labelConfirmPassword: {
+        marginHorizontal: 5,
+        fontFamily: "Montserrat-Regular",
+        color: "#A2A2A2",
+        marginTop: 15
+    },
     forgotPassword: {
         color: "#000000",
         textAlign: "right",
-        marginVertical: 22,
+        marginTop: 22,
         fontSize: 15,
         fontFamily: "Montserrat-Light",
     },
     button: {
         alignItems: "center",
         backgroundColor: "#5EB14E",
+        marginTop: 20,
         paddingVertical: 22,
         borderRadius: 10,
     },
