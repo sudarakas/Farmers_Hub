@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 import Input from '../../util/forms/input'
+import Validation from '../../util/forms/validation'
 
 class LoginForm extends Component {
     _isMounted = false;
@@ -18,6 +19,7 @@ class LoginForm extends Component {
                 valid: false,
                 type: "textinput",
                 rules: {
+                    isRequired: true,
                     isEmail: true
                 }
             },
@@ -26,6 +28,7 @@ class LoginForm extends Component {
                 valid: false,
                 type: "textinput",
                 rules: {
+                    isRequired: true,
                     minLength: 6
                 }
             },
@@ -52,6 +55,13 @@ class LoginForm extends Component {
         //to update the form after applying the logic       
         let duplicateForm = this.state.form;
         duplicateForm[name].value = value;
+
+
+        //validate the rules
+        let rules = duplicateForm[name].rules
+        let valid = Validation(value, rules, duplicateForm);
+
+        duplicateForm[name].valid = valid;
 
         this.setState({
             form: duplicateForm
