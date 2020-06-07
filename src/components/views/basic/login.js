@@ -32,17 +32,23 @@ class Home extends Component {
             orientation: getOrientation(500)
         })
     }
-    
+
+    componentDidUpdate() {
+        this._isMounted = true;
+    }
+
     onChangeType = (type) => {
         const pageType = type;
-        this.setState({
-            pageType: pageType === 'Register' ? 'Register' : 'Login',
-            firstTitleText: pageType === 'Register' ? 'Create New' : 'Welcome',
-            secondTitleText: pageType === 'Register' ? 'Account' : 'Back!',
-            subTitleText: pageType === 'Register' ? 'Please fill all the details to create a new account' : 'Login to access the Farmers’ Hub',
-        })
+        if (this._isMounted) {
+            this.setState({
+                pageType: pageType === 'Register' ? 'Register' : 'Login',
+                firstTitleText: pageType === 'Register' ? 'Create New' : 'Welcome',
+                secondTitleText: pageType === 'Register' ? 'Account' : 'Back!',
+                subTitleText: pageType === 'Register' ? 'Please fill all the details to create a new account' : 'Login to access the Farmers’ Hub',
+            })
+        }
     }
-    
+
     showLoginForm = () => {
         this.setState({
             textAnimations: true
@@ -76,40 +82,42 @@ class Home extends Component {
 
     render() {
         return (
-            <ScrollView contentContainerStyle={{ flex: 1 }}>
-                <View style={styles.mainContainer} >
-                    <Animated.View style={{
-                        //increase the opacity of the text
-                        opacity: this.state.topicText.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0, 1],
-                            extrapolate: "clamp",
-                        }),
-                    }}>
-                        <View style={styles.topicText}>
-                            <Text style={styles.welcomeText}>{this.state.firstTitleText}</Text>
-                            <Text style={styles.backText}>{this.state.secondTitleText}</Text>
-                        </View>
-                    </Animated.View>
+            <View style={styles.topContainer}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                    <View style={styles.mainContainer} >
+                        <Animated.View style={{
+                            //increase the opacity of the text
+                            opacity: this.state.topicText.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [0, 1],
+                                extrapolate: "clamp",
+                            }),
+                        }}>
+                            <View style={styles.topicText}>
+                                <Text style={styles.welcomeText}>{this.state.firstTitleText}</Text>
+                                <Text style={styles.backText}>{this.state.secondTitleText}</Text>
+                            </View>
+                        </Animated.View>
 
-                    <Animated.View style={{
-                        //increase the opacity of the text
-                        opacity: this.state.accessText.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0, 1],
-                            extrapolate: "clamp",
-                        }),
-                    }}>
-                        <Text style={styles.accessText}>{this.state.subTitleText}</Text>
-                    </Animated.View>
+                        <Animated.View style={{
+                            //increase the opacity of the text
+                            opacity: this.state.accessText.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [0, 1],
+                                extrapolate: "clamp",
+                            }),
+                        }}>
+                            <Text style={styles.accessText}>{this.state.subTitleText}</Text>
+                        </Animated.View>
 
-                    <LoginPanel
-                        show={this.state.textAnimations}
-                        onChangePageType={this.onChangeType}
-                        orientation={this.state.orientation}
-                    />
-                </View>
-            </ScrollView>
+                        <LoginPanel
+                            show={this.state.textAnimations}
+                            onChangePageType={this.onChangeType}
+                            orientation={this.state.orientation}
+                        />
+                    </View>
+                </ScrollView>
+            </View>
         )
     }
 }
@@ -121,8 +129,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
         paddingHorizontal: 20,
     },
-    topicText: {
-
+    topContainer: {
+        flex: 1,
+        height: '100%',
     },
     welcomeText: {
         fontSize: 40,

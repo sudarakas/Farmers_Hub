@@ -15,7 +15,7 @@ class LoginPanel extends Component {
         inputForm: new Animated.Value(0), //animation for form
     }
 
-    componentDidMount() {
+    componentDidUpdate() {
         this._isMounted = true;
     }
 

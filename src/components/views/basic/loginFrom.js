@@ -40,7 +40,7 @@ class LoginForm extends Component {
         }
     }
 
-    componentDidMount() {
+    componentDidUpdate() {
         this._isMounted = true;
     }
 
