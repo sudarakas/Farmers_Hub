@@ -7,7 +7,9 @@ import LoadTabs from '../tabs';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { signUp } from '../../store/actions/user_actions';
+import { signUp, signIn } from '../../store/actions/user_actions';
+import { storeTokens } from '../../util/misc';
+
 
 class LoginForm extends Component {
     _isMounted = false;
@@ -129,8 +131,17 @@ class LoginForm extends Component {
 
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
+
+    //check the user authenticated successfully and redirect
+    accessControl = () => {
+        if (!this.props.User.userData.uid) {
+            this.setState({ hasErrors: true });
+        } else {
+            storeTokens(this.props.User.userData, () => {
+                this.setState({ hasErrors: true });
+                LoadTabs();
+            })
+        }
     }
 
     //submit the form
@@ -160,10 +171,12 @@ class LoginForm extends Component {
         //submit the form to firebase
         if (isValidForm) {
             this.state.type === 'Login' ?
-                LoadTabs()
+                this.props.signIn(submitForm).then(() => {
+                    this.accessControl()
+                })
                 :
                 this.props.signUp(submitForm).then(() => {
-                    console.log('success')
+                    this.accessControl()
                 })
         } else {
             this.setState({
@@ -174,6 +187,10 @@ class LoginForm extends Component {
 
     navigateToHome = () => {
         this.state.type === 'Login' ? LoadTabs() : null
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
@@ -302,12 +319,12 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        User: state.user
+        User: state.User
     }
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ signUp }, dispatch)
+    return bindActionCreators({ signUp, signIn }, dispatch)
 }
 
 
