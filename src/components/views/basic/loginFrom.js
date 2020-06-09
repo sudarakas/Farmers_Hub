@@ -8,6 +8,8 @@ import LoadTabs from '../tabs';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { signUp, signIn } from '../../store/actions/user_actions';
+import { storeTokens } from '../../util/misc';
+
 
 class LoginForm extends Component {
     _isMounted = false;
@@ -129,8 +131,17 @@ class LoginForm extends Component {
 
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
+
+    //check the user authenticated successfully and redirect
+    accessControl = () => {
+        if (!this.props.User.userData.uid) {
+            this.setState({ hasErrors: true });
+        } else {
+            storeTokens(this.props.User.userData, () => {
+                this.setState({ hasErrors: true });
+                LoadTabs();
+            })
+        }
     }
 
     //submit the form
@@ -161,11 +172,11 @@ class LoginForm extends Component {
         if (isValidForm) {
             this.state.type === 'Login' ?
                 this.props.signIn(submitForm).then(() => {
-                    console.log(this.props.User)
+                    this.accessControl()
                 })
                 :
                 this.props.signUp(submitForm).then(() => {
-                    console.log(this.props.User)
+                    this.accessControl()
                 })
         } else {
             this.setState({
@@ -176,6 +187,10 @@ class LoginForm extends Component {
 
     navigateToHome = () => {
         this.state.type === 'Login' ? LoadTabs() : null
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
