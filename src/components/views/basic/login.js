@@ -9,6 +9,7 @@ import { autoSignIn } from '../../store/actions/user_actions';
 import { bindActionCreators } from "redux";
 import LoadTabs from '../tabs';
 
+
 class Home extends Component {
     _isMounted = false;
     constructor(props) {
