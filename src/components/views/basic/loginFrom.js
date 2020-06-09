@@ -7,7 +7,7 @@ import LoadTabs from '../tabs';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { signUp } from '../../store/actions/user_actions';
+import { signUp, signIn } from '../../store/actions/user_actions';
 
 class LoginForm extends Component {
     _isMounted = false;
@@ -160,10 +160,12 @@ class LoginForm extends Component {
         //submit the form to firebase
         if (isValidForm) {
             this.state.type === 'Login' ?
-                LoadTabs()
+                this.props.signIn(submitForm).then(() => {
+                    console.log(this.props.User)
+                })
                 :
                 this.props.signUp(submitForm).then(() => {
-                    console.log('success')
+                    console.log(this.props.User)
                 })
         } else {
             this.setState({
@@ -302,12 +304,12 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        User: state.user
+        User: state.User
     }
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ signUp }, dispatch)
+    return bindActionCreators({ signUp, signIn }, dispatch)
 }
 
 
