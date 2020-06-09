@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Button, ScrollView, Animated, Easing, ActivityIndicator } from 'react-native';
-import { getOrientation, setOrientationListener, removeOrientationListener, getTokens } from '../../util/misc';
+import { getOrientation, setOrientationListener, removeOrientationListener, getTokens, storeTokens } from '../../util/misc';
 
 import LoginPanel from "./loginPanel";
 
 import { connect } from "react-redux";
 import { autoSignIn } from '../../store/actions/user_actions';
 import { bindActionCreators } from "redux";
+import LoadTabs from '../tabs';
 
 class Home extends Component {
     _isMounted = false;
@@ -73,7 +74,18 @@ class Home extends Component {
                 //if not redirects to the login
                 this.setState({ loading: false })
             } else {
-
+                //check the existing token
+                this.props.autoSignIn(value[1][1]).then(() => {
+                    //if stored token is not valid redirect to login 
+                    if (!this.props.User.userData.token) {
+                        this.setState({ loading: false })
+                    } else {
+                        //otherwise update the data in store and redirect to home
+                        storeTokens(this.props.User.userData, () => {
+                            LoadTabs();
+                        })
+                    }
+                })
             }
         })
 
