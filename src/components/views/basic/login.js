@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button, ScrollView, Animated, Easing } from 'react-native';
-
-import { getOrientation, setOrientationListener, removeOrientationListener } from '../../util/misc';
+import { StyleSheet, View, Text, Button, ScrollView, Animated, Easing, ActivityIndicator } from 'react-native';
+import { getOrientation, setOrientationListener, removeOrientationListener, getTokens } from '../../util/misc';
 
 import LoginPanel from "./loginPanel";
+
+import { connect } from "react-redux";
+import { autoSignIn } from '../../store/actions/user_actions';
+import { bindActionCreators } from "redux";
 
 class Home extends Component {
     _isMounted = false;
@@ -11,6 +14,7 @@ class Home extends Component {
         super(props)
 
         this.state = {
+            loading: true,
             orientation: getOrientation(500),
             topicText: new Animated.Value(0), //animation for the topic text (welcome back)
             accessText: new Animated.Value(0), //animation for the accessText text (login access..)
@@ -62,6 +66,17 @@ class Home extends Component {
     }
 
     componentDidMount() {
+
+        //check the device has tokens
+        getTokens((value) => {
+            if (value[0][1] === null) {
+                //if not redirects to the login
+                this.setState({ loading: false })
+            } else {
+
+            }
+        })
+
         Animated.sequence([
             Animated.timing(this.state.topicText, {
                 toValue: 1,
@@ -81,44 +96,57 @@ class Home extends Component {
     }
 
     render() {
-        return (
-            <View style={styles.topContainer}>
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                    <View style={styles.mainContainer} >
-                        <Animated.View style={{
-                            //increase the opacity of the text
-                            opacity: this.state.topicText.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [0, 1],
-                                extrapolate: "clamp",
-                            }),
-                        }}>
-                            <View style={styles.topicText}>
-                                <Text style={styles.welcomeText}>{this.state.firstTitleText}</Text>
-                                <Text style={styles.backText}>{this.state.secondTitleText}</Text>
-                            </View>
-                        </Animated.View>
 
-                        <Animated.View style={{
-                            //increase the opacity of the text
-                            opacity: this.state.accessText.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [0, 1],
-                                extrapolate: "clamp",
-                            }),
-                        }}>
-                            <Text style={styles.accessText}>{this.state.subTitleText}</Text>
-                        </Animated.View>
+        if (this.state.loading) {
+            return (
+                <View style={styles.loading}>
+                    <ActivityIndicator
+                        size="large"
+                        color="#5EB14E"
+                    />
+                </View>
+            )
+        }
+        else {
+            return (
+                <View style={styles.topContainer}>
+                    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                        <View style={styles.mainContainer} >
+                            <Animated.View style={{
+                                //increase the opacity of the text
+                                opacity: this.state.topicText.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [0, 1],
+                                    extrapolate: "clamp",
+                                }),
+                            }}>
+                                <View style={styles.topicText}>
+                                    <Text style={styles.welcomeText}>{this.state.firstTitleText}</Text>
+                                    <Text style={styles.backText}>{this.state.secondTitleText}</Text>
+                                </View>
+                            </Animated.View>
 
-                        <LoginPanel
-                            show={this.state.textAnimations}
-                            onChangePageType={this.onChangeType}
-                            orientation={this.state.orientation}
-                        />
-                    </View>
-                </ScrollView>
-            </View>
-        )
+                            <Animated.View style={{
+                                //increase the opacity of the text
+                                opacity: this.state.accessText.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [0, 1],
+                                    extrapolate: "clamp",
+                                }),
+                            }}>
+                                <Text style={styles.accessText}>{this.state.subTitleText}</Text>
+                            </Animated.View>
+
+                            <LoginPanel
+                                show={this.state.textAnimations}
+                                onChangePageType={this.onChangeType}
+                                orientation={this.state.orientation}
+                            />
+                        </View>
+                    </ScrollView>
+                </View>
+            )
+        }
     }
 }
 
@@ -149,7 +177,23 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "#A2A2A2",
         fontFamily: "Montserrat-Regular",
+    },
+    loading: {
+        flex: 1,
+        backgroundColor: '#ffffff',
+        alignItems: "center",
+        justifyContent: "center"
     }
 });
 
-export default Home;
+function mapStateToProps(state) {
+    return {
+        User: state.User
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ autoSignIn }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

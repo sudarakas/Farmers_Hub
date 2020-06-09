@@ -30,6 +30,7 @@ export const getPlatform = () => {
 export const APIKEY = `AIzaSyA89OZJuk8YYHt1Y26bgNrMRhapKnRnEu4`
 export const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${APIKEY}`
 export const SIGNIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${APIKEY}`
+export const REFRESH_TOKEN_URL = `https://securetoken.googleapis.com/v1/token?key=${APIKEY}`;
 
 //store the tokens inside the device
 export const storeTokens = (values, callback) => {
