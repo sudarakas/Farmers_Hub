@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
 import { StyleSheet, View, Text, } from 'react-native';
 
-import { triggerSideMenu } from "../../util/misc";
+import { navigatorDeepLink } from "../../util/misc";
 
 class Home extends Component {
 

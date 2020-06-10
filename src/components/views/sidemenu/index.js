@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import { Navigation } from 'react-native-navigation';
 
 import { connect } from "react-redux";
 
@@ -34,7 +35,7 @@ class SideMenu extends Component {
             }
         ]
     }
-
+    //render the menu button as defined in the state
     renderButton = (button) => (
         <Icon.Button
             key={button.value}
@@ -43,7 +44,7 @@ class SideMenu extends Component {
             iconStyle={{ width: 18 }}
             color="#5EB14E"
             size={18}
-            onPress={() => alert('fu')}
+            onPress={() => this.navigateFromSideMenu(button)}
         >
             <Text style={styles.buttonText}>
                 {button.value}
@@ -52,6 +53,7 @@ class SideMenu extends Component {
 
     )
 
+    //generate the menu buttons
     showSideMenuButtons = (buttons) => (
         buttons.map(button => (
             !button.privacy ?
@@ -61,6 +63,36 @@ class SideMenu extends Component {
                     : null
         ))
     )
+
+    //naviagate from the side menu buttons
+    navigateFromSideMenu = (button) => {
+
+        //for tab switching
+        if (button.typeLink === 'tab') {
+            Navigation.mergeOptions('BOTTOM_TABS_LAYOUT', {
+                bottomTabs: {
+                    currentTabIndex: button.index
+                },
+                sideMenu: {
+                    left: {
+                        visible: false
+                    }
+                }
+            })
+        }
+        //for page navigation (modal)
+        else{
+            Navigation.showModal({
+                stack: {
+                  children: [{
+                    component: {
+                      name: 'farmersHub.UserItems',
+                    }
+                  }]
+                }
+              });
+        }
+    }
 
 
     render() {

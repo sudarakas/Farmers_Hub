@@ -8,6 +8,7 @@ import Flash from './src/components/views/basic/index';
 import Login from './src/components/views/basic/login';
 import Home from './src/components/views/home';
 import AddItem from './src/components/views/auth/addItem';
+import UserItems from './src/components/views/auth/userItem'
 import SideMenu from './src/components/views/sidemenu';
 
 
@@ -20,6 +21,7 @@ Navigation.registerComponentWithRedux("farmersHub.Login", () => Login, Provider,
 Navigation.registerComponentWithRedux("farmersHub.Home", () => Home, Provider, store);
 Navigation.registerComponentWithRedux("farmersHub.AddItem", () => AddItem, Provider, store);
 Navigation.registerComponentWithRedux("farmersHub.SideMenu", () => SideMenu, Provider, store);
+Navigation.registerComponentWithRedux("farmersHub.UserItems", () => UserItems, Provider, store);
 
 const menuIcon = Icon.getImageSource('menu', 24, '#000000');
 
@@ -52,6 +54,25 @@ AddItem.options = {
             color: '#ffffff'
         },
         elevation: 0,
+    },
+}
+
+//options for UserItems Page
+UserItems.options = {
+    topBar: {
+        title: {
+            text: 'Add Item',
+            color: '#000000',
+            alignment: 'center',
+            fontFamily: 'Montserrat-Black'
+        },
+        background: {
+            color: '#ffffff'
+        },
+        elevation: 0,
+        backButton: {
+            visible: true
+        }
     },
 }
 
