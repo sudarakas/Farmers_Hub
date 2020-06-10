@@ -19,6 +19,13 @@ const LoadTabs = () => {
                             name: 'farmersHub.SideMenu',
                         },
                     },
+                    options: {
+                        sideMenu: {
+                            left: {
+                                width: 250 // You can set the width here...
+                            }
+                        }
+                    },
                     center: {
                         bottomTabs: {
                             id: 'BOTTOM_TABS_LAYOUT',
@@ -79,5 +86,39 @@ const LoadTabs = () => {
         });
     })
 }
+
+// Navigation.setRoot({
+//     root: {
+//       sideMenu: {
+//         left: {
+//           component: {
+//             name: 'nav.SideMenu',
+//           },
+//         },
+//         center: {
+//           stack: {
+//             options: {
+//               topBar: {
+//                 visible: true,
+//               },
+//             },
+//             id: 'SideMenuStack',
+//             children: [{
+//               component: {
+//                 name: 'nav.App',
+//               }
+//             }]
+//           }
+//         },
+//         options: {
+//           sideMenu: {
+//             left: {
+//               width: 300 // You can set the width here...
+//             }
+//           }
+//         }
+//       }
+//     }
+//   });
 
 export default LoadTabs;
