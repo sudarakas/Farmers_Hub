@@ -1,13 +1,15 @@
 import { Navigation } from 'react-native-navigation';
 import configureStore from "./src/components/store/config";
 import { Provider } from "react-redux";
-
+import Icon from 'react-native-vector-icons/Feather';
 
 //import the pages for adding in navigation
 import Flash from './src/components/views/basic/index';
 import Login from './src/components/views/basic/login';
 import Home from './src/components/views/home';
-import AddItem from "./src/components/views/auth/addItem";
+import AddItem from './src/components/views/auth/addItem';
+import UserItems from './src/components/views/auth/userItem'
+import SideMenu from './src/components/views/sidemenu';
 
 
 //create the store
@@ -18,8 +20,12 @@ Navigation.registerComponentWithRedux("farmersHub.Flash", () => Flash, Provider,
 Navigation.registerComponentWithRedux("farmersHub.Login", () => Login, Provider, store);
 Navigation.registerComponentWithRedux("farmersHub.Home", () => Home, Provider, store);
 Navigation.registerComponentWithRedux("farmersHub.AddItem", () => AddItem, Provider, store);
+Navigation.registerComponentWithRedux("farmersHub.SideMenu", () => SideMenu, Provider, store);
+Navigation.registerComponentWithRedux("farmersHub.UserItems", () => UserItems, Provider, store);
 
-//options for Flash Page
+const menuIcon = Icon.getImageSource('menu', 24, '#000000');
+
+//options for Home Page
 Home.options = {
     topBar: {
         title: {
@@ -32,6 +38,41 @@ Home.options = {
             color: '#ffffff'
         },
         elevation: 0,
+    },
+}
+
+//options for AddItem Page
+AddItem.options = {
+    topBar: {
+        title: {
+            text: 'Add Item',
+            color: '#000000',
+            alignment: 'center',
+            fontFamily: 'Montserrat-Black'
+        },
+        background: {
+            color: '#ffffff'
+        },
+        elevation: 0,
+    },
+}
+
+//options for UserItems Page
+UserItems.options = {
+    topBar: {
+        title: {
+            text: 'Add Item',
+            color: '#000000',
+            alignment: 'center',
+            fontFamily: 'Montserrat-Black'
+        },
+        background: {
+            color: '#ffffff'
+        },
+        elevation: 0,
+        backButton: {
+            visible: true
+        }
     },
 }
 
