@@ -1,54 +1,83 @@
 import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/Feather';
 
-import HomeIcon from '../../../assets/icons/home.png';
+const HomeIcon = Icon.getImageSource('home', 20, '#5EB14E');
 import SellIcon from '../../../assets/icons/sell.png';
 
 const LoadTabs = () => {
-    Navigation.setRoot({
-        root: {
-            bottomTabs: {
-                id: 'BOTTOM_TABS_LAYOUT',
-                children: [
-                    {
-                        stack: {
-                            id: 'HOME_TAB',
+    Promise.all([
+        Icon.getImageSource('home', 24, '#5EB14E'),
+        Icon.getImageSource('dollar-sign', 24, '#5EB14E'),
+        Icon.getImageSource('menu', 24, '#000000')
+    ]).then(icons => {
+        Navigation.setRoot({
+            root: {
+                sideMenu: {
+                    left: {
+                        component: {
+                            id: 'SideMenu',
+                            name: 'farmersHub.SideMenu',
+                        },
+                    },
+                    center: {
+                        bottomTabs: {
+                            id: 'BOTTOM_TABS_LAYOUT',
                             children: [
                                 {
-                                    component: {
-                                        id: 'farmersHub.Home',
-                                        name: 'farmersHub.Home'
+                                    stack: {
+                                        id: 'HOME_TAB',
+                                        children: [
+                                            {
+                                                component: {
+                                                    id: 'farmersHub.Home',
+                                                    name: 'farmersHub.Home'
+                                                }
+                                            }
+                                        ],
+                                        options: {
+                                            bottomTab: {
+                                                icon: icons[0],
+                                            },
+                                            topBar: {
+                                                leftButtons: {
+                                                    id: 'sideMenu',
+                                                    icon: icons[2]
+                                                }
+                                            }
+                                        }
                                     }
-                                }
-                            ],
-                            options: {
-                                bottomTab: {
-                                    icon: HomeIcon,
-                                }
-                            }
-                        }
-                    },
-                    {
-                        stack: {
-                            id: 'PROFILE_TAB',
-                            children: [
+                                },
                                 {
-                                    component: {
-                                        id: 'farmersHub.AddItem',
-                                        name: 'farmersHub.AddItem'
+                                    stack: {
+                                        id: 'ADD_ITEM',
+                                        children: [
+                                            {
+                                                component: {
+                                                    id: 'farmersHub.AddItem',
+                                                    name: 'farmersHub.AddItem'
+                                                }
+                                            }
+                                        ],
+                                        options: {
+                                            bottomTab: {
+                                                icon: icons[1],
+                                            },
+                                            topBar: {
+                                                leftButtons: {
+                                                    id: 'sideMenu',
+                                                    icon: icons[2]
+                                                }
+                                            }
+                                        }
                                     }
-                                }
-                            ],
-                            options: {
-                                bottomTab: {
-                                    icon: SellIcon,
-                                }
-                            }
+                                },
+                            ]
                         }
-                    },
-                ]
+                    }
+                }
             }
-        }
-    });
+        });
+    })
 }
 
 export default LoadTabs;
