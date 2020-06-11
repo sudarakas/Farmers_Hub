@@ -1,6 +1,7 @@
 # Farmers_Hub
 
 #Tasks
+- [x] Proposal
 - [x] UI Design
 - [x] Login FB
 - [x] Register FB
