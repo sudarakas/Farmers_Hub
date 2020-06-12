@@ -1,22 +1,29 @@
 import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
-import { StyleSheet, View, Text, } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, } from 'react-native';
 
-import { navigatorDeepLink } from "../../util/misc";
+import CategoryMenu from '../home/categorymenu';
 
 class Home extends Component {
 
     constructor(props) {
         super(props);
         Navigation.events().bindComponent(this);
+
+        this.state ={
+            categories:['Vegetables','Meat', 'Fruits','Cereals','Flowers','Others']
+        }
     }
 
     render() {
         return (
-            <View style={styles.mainContainer}>
-                <Text>Home Screen</Text>
-
-            </View>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <View style={styles.mainContainer}>
+                    <CategoryMenu
+                        categories={this.state.categories}
+                    />
+                </View>
+            </ScrollView>
         )
     }
 
