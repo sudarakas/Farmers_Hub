@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
 import { StyleSheet, View, Text, ScrollView, } from 'react-native';
 
+import { connect } from "react-redux";
+import { getItems } from "../../store/actions/item_actions";
+import { bindActionCreators } from "redux";
+
 import CategoryMenu from '../home/categorymenu';
 
 class Home extends Component {
@@ -10,9 +14,24 @@ class Home extends Component {
         super(props);
         Navigation.events().bindComponent(this);
 
-        this.state ={
-            categories:['Vegetables','Meat', 'Fruits','Cereals','Flowers','Others']
+        this.state = {
+            categories: ['All', 'Vegetables', 'Meat', 'Fruits', 'Cereals', 'Flowers', 'Others'],
+            selectedCategory: 'All'
         }
+    }
+
+    //update the state
+    updateSelectedCategory = (category) => {
+        this.setState({
+            selectedCategory: category
+        })
+    }
+
+    //fetch the items from the database
+    componentDidMount(){
+        this.props.getItems('All').then(() =>{
+            console.log(this.props.Items.list)
+        })
     }
 
     render() {
@@ -21,6 +40,8 @@ class Home extends Component {
                 <View style={styles.mainContainer}>
                     <CategoryMenu
                         categories={this.state.categories}
+                        selectedCategory={this.state.selectedCategory}
+                        updateSelectedCategory={this.updateSelectedCategory}
                     />
                 </View>
             </ScrollView>
@@ -50,4 +71,14 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Home;
+function mapStateToProps(state) {
+    return {
+        Items: state.Item
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ getItems }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

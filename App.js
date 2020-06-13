@@ -32,7 +32,7 @@ Home.options = {
             text: 'Home',
             color: '#000000',
             alignment: 'center',
-            fontFamily: 'Montserrat-Black'
+            fontFamily: 'Montserrat-Bold'
         },
         background: {
             color: '#ffffff'
@@ -48,7 +48,7 @@ AddItem.options = {
             text: 'Add Item',
             color: '#000000',
             alignment: 'center',
-            fontFamily: 'Montserrat-Black'
+            fontFamily: 'Montserrat-Bold'
         },
         background: {
             color: '#ffffff'
@@ -64,7 +64,7 @@ UserItems.options = {
             text: 'Add Item',
             color: '#000000',
             alignment: 'center',
-            fontFamily: 'Montserrat-Black'
+            fontFamily: 'Montserrat-Bold'
         },
         background: {
             color: '#ffffff'

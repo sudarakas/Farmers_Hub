@@ -32,6 +32,9 @@ export const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:si
 export const SIGNIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${APIKEY}`
 export const REFRESH_TOKEN_URL = `https://securetoken.googleapis.com/v1/token?key=${APIKEY}`;
 
+//firebase database
+export const FIREBASE_URL = `https://farmershub-d1133.firebaseio.com`;
+
 //store the tokens inside the device
 export const storeTokens = (values, callback) => {
     //current date and time
