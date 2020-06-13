@@ -9,6 +9,7 @@
 - [x] Auto Login
 - [x] Bottom Tab
 - [x] Side Menu
+- [x] Horizontal Menu
 - [ ] Add Item
 - [ ] View Item
 - [ ] Delete Item
