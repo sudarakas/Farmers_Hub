@@ -11,6 +11,7 @@
 - [x] Side Menu
 - [x] Horizontal Menu
 - [ ] Configure Firestore
+- [ ] Network Check
 - [ ] Add Item
 - [ ] View Item
 - [ ] Delete Item
