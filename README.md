@@ -10,6 +10,7 @@
 - [x] Bottom Tab
 - [x] Side Menu
 - [x] Horizontal Menu
+- [ ] Configure Firestore
 - [ ] Add Item
 - [ ] View Item
 - [ ] Delete Item
