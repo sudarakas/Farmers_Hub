@@ -83,12 +83,22 @@ export const generateGridPanel = (list) => {
     //for the single row
     let grid = {}
 
+    //get the array count
+    let listCount = items.length;
+
     if (items) {
-        items.forEach(element => {
+        items.forEach((element,index)  => {
             if (count == 1) {
                 //store block01
                 grid['block01'] = element;
                 count++;
+
+                // if the array count is odd we need to
+                // assign it as a single row 
+                if(index == (listCount-1)){
+                    newItems.push(grid);
+                }
+
             } else {
                 //store block02
                 grid['block02'] = element;

@@ -9,6 +9,7 @@ import { bindActionCreators } from "redux";
 import { generateGridPanel } from "../../util/misc";
 
 import CategoryMenu from '../home/categorymenu';
+import TemplateItem from '../home/templateItem';
 
 class Home extends Component {
 
@@ -35,14 +36,24 @@ class Home extends Component {
     componentDidMount() {
         this.props.getItems('All').then(() => {
             const newItems = generateGridPanel(this.props.Items.list);
-
             this.setState({
                 loading: false,
                 items: newItems
             })
-            console.log(newItems);
         })
     }
+
+    //display the item on the screen
+    displayItems = () => (
+        this.state.items.map((item, i) => (
+            <TemplateItem
+                key={`column-${i}`}
+                item={item}
+                iteration={i}
+            />
+        ))
+    )
+
 
     render() {
         return (
@@ -54,6 +65,7 @@ class Home extends Component {
                         updateSelectedCategory={this.updateSelectedCategory}
                     />
 
+                    {/* for loading animation while fetching data from server */}
                     {
                         this.state.loading ?
                             <View style={styles.loading}>
@@ -66,6 +78,13 @@ class Home extends Component {
                             </View>
                             : null
                     }
+
+                    <View style={styles.itemContainer}>
+                        <View style={styles.itemBox}>
+                            {this.displayItems()}
+                        </View>
+                    </View>
+
                 </View>
             </ScrollView>
         )
@@ -89,7 +108,6 @@ class Home extends Component {
 //styles for the components
 const styles = StyleSheet.create({
     mainContainer: {
-        flex: 1,
         backgroundColor: '#ffffff',
     },
     loading: {
@@ -99,9 +117,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: 150,
     },
-    loadingText:{
+    loadingText: {
         fontFamily: "Montserrat-Regular",
         color: '#A2A2A2'
+    },
+    itemContainer: {
+        marginTop: 10,
+        padding: 10,
+        justifyContent: 'space-between',
+
     }
 });
 

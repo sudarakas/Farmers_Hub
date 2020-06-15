@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 10,
         width: '100%',
-        height: 50
+        height: 50,
+        marginBottom: 2
     },
     categoryButton: {
         marginRight: 10,
