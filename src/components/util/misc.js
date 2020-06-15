@@ -63,3 +63,44 @@ export const getTokens = (callback) => {
         callback(value)
     })
 }
+
+export const generateGridPanel = (list) => {
+
+    /*
+        create the front grid
+        row 01:
+            post 01 | post 02
+        row 02:            
+            post 03 | post 04
+    */
+
+    //to store the items
+    let newItems = [];
+    let items = list;
+
+    //to track the posts in a row
+    let count = 1;
+    //for the single row
+    let grid = {}
+
+    if (items) {
+        items.forEach(element => {
+            if (count == 1) {
+                //store block01
+                grid['block01'] = element;
+                count++;
+            } else {
+                //store block02
+                grid['block02'] = element;
+                //add the row into main grid
+                newItems.push(grid);
+
+                //reset the parameters for the next row
+                count = 1;
+                grid = {};
+            }
+        });
+    }
+
+    return newItems;
+}

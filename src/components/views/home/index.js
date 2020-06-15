@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
-import { StyleSheet, View, Text, ScrollView, } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 
 import { connect } from "react-redux";
 import { getItems } from "../../store/actions/item_actions";
 import { bindActionCreators } from "redux";
+import { generateGridPanel } from "../../util/misc";
 
 import CategoryMenu from '../home/categorymenu';
 
@@ -15,6 +17,8 @@ class Home extends Component {
         Navigation.events().bindComponent(this);
 
         this.state = {
+            loading: true,
+            items: [],
             categories: ['All', 'Vegetables', 'Meat', 'Fruits', 'Cereals', 'Flowers', 'Others'],
             selectedCategory: 'All'
         }
@@ -28,9 +32,15 @@ class Home extends Component {
     }
 
     //fetch the items from the database
-    componentDidMount(){
-        this.props.getItems('All').then(() =>{
-            console.log(this.props.Items.list)
+    componentDidMount() {
+        this.props.getItems('All').then(() => {
+            const newItems = generateGridPanel(this.props.Items.list);
+
+            this.setState({
+                loading: false,
+                items: newItems
+            })
+            console.log(newItems);
         })
     }
 
@@ -43,6 +53,19 @@ class Home extends Component {
                         selectedCategory={this.state.selectedCategory}
                         updateSelectedCategory={this.updateSelectedCategory}
                     />
+
+                    {
+                        this.state.loading ?
+                            <View style={styles.loading}>
+                                <ActivityIndicator
+                                    size="large"
+                                    color="#5EB14E"
+                                />
+                                <Text style={styles.loadingText}>Please wait ....</Text>
+
+                            </View>
+                            : null
+                    }
                 </View>
             </ScrollView>
         )
@@ -68,6 +91,17 @@ const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         backgroundColor: '#ffffff',
+    },
+    loading: {
+        flex: 1,
+        backgroundColor: '#ffffff',
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 150,
+    },
+    loadingText:{
+        fontFamily: "Montserrat-Regular",
+        color: '#A2A2A2'
     }
 });
 
