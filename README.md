@@ -10,6 +10,8 @@
 - [x] Bottom Tab
 - [x] Side Menu
 - [x] Horizontal Menu
+- [x] Item Fetch from FB
+- [x] Render Items on Home Page
 - [ ] Configure Firestore
 - [ ] Network Check
 - [ ] Add Item
