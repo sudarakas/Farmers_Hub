@@ -11,7 +11,9 @@
 - [x] Side Menu
 - [x] Horizontal Menu
 - [x] Item Fetch from FB
-- [x] Render Items on Home Page
+- [x] Render Items on Home
+- [x] Sort by Category
+- [ ] Not Found Page
 - [ ] Configure Firestore
 - [ ] Network Check
 - [ ] Add Item

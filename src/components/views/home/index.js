@@ -28,7 +28,18 @@ class Home extends Component {
     //update the state
     updateSelectedCategory = (category) => {
         this.setState({
-            selectedCategory: category
+            loading: true,
+            selectedCategory: category,
+            items: []
+        })
+        //display accroding to the category
+        this.props.getItems(category).then(() => {
+            console.log(this.props.Items.list)
+            const newItems = generateGridPanel(this.props.Items.list);
+            this.setState({
+                loading: false,
+                items: newItems
+            })
         })
     }
 

@@ -8,8 +8,9 @@ export function getItems(category) {
 
     let URL = `${FIREBASE_URL}/items.json`;
 
+    //for custom category, update the URL   
     if (category !== 'All') {
-        URL = '...'
+        URL = `${URL}/?orderBy=\"category\"&equalTo=\"${category}\"`
     }
 
     const request = axios(URL)
