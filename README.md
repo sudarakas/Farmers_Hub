@@ -13,7 +13,7 @@
 - [x] Item Fetch from FB
 - [x] Render Items on Home
 - [x] Sort by Category
-- [ ] Not Found Page
+- [x] Not Found Page
 - [ ] Configure Firestore
 - [ ] Network Check
 - [ ] Add Item

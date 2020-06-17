@@ -87,7 +87,14 @@ class Home extends Component {
                                 <Text style={styles.loadingText}>Please wait ....</Text>
 
                             </View>
-                            : null
+                            :
+                            this.state.items.length ?
+                                null
+                                :
+                                <View style={styles.notFount}>
+                                    <Icon name="alert-circle" style={styles.notFountIcon}/>
+                    <Text style={styles.notFountText}>Sorry! No results found for {this.state.selectedCategory}</Text>
+                                </View>
                     }
 
                     <View style={styles.itemContainer}>
@@ -122,21 +129,38 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
     },
     loading: {
-        flex: 1,
+      //  flex: 1,
         backgroundColor: '#ffffff',
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 150,
+        marginTop: '50%',
     },
     loadingText: {
         fontFamily: "Montserrat-Regular",
-        color: '#A2A2A2'
+        color: '#A2A2A2',
     },
     itemContainer: {
         marginTop: 10,
         padding: 10,
         justifyContent: 'space-between',
 
+    },
+    notFount:{
+        flex: 1,
+        backgroundColor: '#ffffff',
+        paddingTop: '100%',
+        alignItems: 'center'
+    },
+    notFountText:{
+        color: '#000000',
+        fontFamily: "Montserrat-Regular",
+    },
+    notFountIcon:{
+        color: '#5EB14E',
+        fontSize: 30,
+        marginTop: '-50%',
+        marginBottom: 3,
+        fontFamily: "Montserrat-Regular",
     }
 });
 

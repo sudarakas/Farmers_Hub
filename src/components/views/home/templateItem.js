@@ -53,8 +53,8 @@ const TemplateItem = (props) => {
 
                 </View>
             )
-            
-        //if row has 1 element
+
+            //if row has 1 element
         } else {
             return (
                 <View style={styles.itemBlockRow}>
@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
         padding: 3,
 
     },
-    itemBlock:{
-        flex:2,
+    itemBlock: {
+        flex: 2,
         marginHorizontal: 5,
         backgroundColor: '#ffffff',
         borderColor: "#DFDFDF",
@@ -110,21 +110,21 @@ const styles = StyleSheet.create({
         borderColor: "#DFDFDF",
         borderWidth: 0.5,
     },
-    itemTextContainer:{
+    itemTextContainer: {
         marginVertical: 15,
         marginLeft: 5
     },
-    itemTextTitle:{
+    itemTextTitle: {
         fontSize: 15,
         fontFamily: "Montserrat-Regular",
         color: '#000000'
     },
-    itemTextUnit:{
+    itemTextUnit: {
         fontSize: 15,
         fontFamily: "Montserrat-Regular",
         color: '#000000'
     },
-    itemTextPrice:{
+    itemTextPrice: {
         fontSize: 13,
         fontFamily: "Montserrat-Bold",
         color: '#5EB14E',
