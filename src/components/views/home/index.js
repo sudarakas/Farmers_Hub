@@ -34,7 +34,6 @@ class Home extends Component {
         })
         //display accroding to the category
         this.props.getItems(category).then(() => {
-            console.log(this.props.Items.list)
             const newItems = generateGridPanel(this.props.Items.list);
             this.setState({
                 loading: false,
@@ -92,8 +91,8 @@ class Home extends Component {
                                 null
                                 :
                                 <View style={styles.notFount}>
-                                    <Icon name="alert-circle" style={styles.notFountIcon}/>
-                    <Text style={styles.notFountText}>Sorry! No results found for {this.state.selectedCategory}</Text>
+                                    <Icon name="alert-circle" style={styles.notFountIcon} />
+                                    <Text style={styles.notFountText}>Sorry! No results found for {this.state.selectedCategory}</Text>
                                 </View>
                     }
 
@@ -129,7 +128,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
     },
     loading: {
-      //  flex: 1,
+        //  flex: 1,
         backgroundColor: '#ffffff',
         alignItems: "center",
         justifyContent: "center",
@@ -145,17 +144,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
 
     },
-    notFount:{
+    notFount: {
         flex: 1,
         backgroundColor: '#ffffff',
         paddingTop: '100%',
         alignItems: 'center'
     },
-    notFountText:{
+    notFountText: {
         color: '#000000',
         fontFamily: "Montserrat-Regular",
     },
-    notFountIcon:{
+    notFountIcon: {
         color: '#5EB14E',
         fontSize: 30,
         marginTop: '-50%',
