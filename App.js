@@ -10,6 +10,7 @@ import Home from './src/components/views/home';
 import AddItem from './src/components/views/auth/addItem';
 import UserItems from './src/components/views/auth/userItem'
 import SideMenu from './src/components/views/sidemenu';
+import Item from './src/components/views/item';
 
 
 //create the store
@@ -22,8 +23,8 @@ Navigation.registerComponentWithRedux("farmersHub.Home", () => Home, Provider, s
 Navigation.registerComponentWithRedux("farmersHub.AddItem", () => AddItem, Provider, store);
 Navigation.registerComponentWithRedux("farmersHub.SideMenu", () => SideMenu, Provider, store);
 Navigation.registerComponentWithRedux("farmersHub.UserItems", () => UserItems, Provider, store);
+Navigation.registerComponentWithRedux("farmersHub.Item", () => Item, Provider, store);
 
-const menuIcon = Icon.getImageSource('menu', 24, '#000000');
 
 //options for Home Page
 Home.options = {
@@ -76,6 +77,37 @@ UserItems.options = {
     },
 }
 
+//options for UserItems Page
+Item.options = {
+    topBar: {
+        title: {
+            text: 'Product Details',
+            color: '#000000',
+            alignment: 'center',
+            fontFamily: 'Montserrat-Bold'
+        },
+        background: {
+            color: '#ffffff'
+        },
+        elevation: 0,
+    },
+    animations: {
+        showModal: {
+            alpha: {
+                from: 0,
+                to: 1,
+                duration: 300
+            }
+        },
+        dismissModal: {
+            alpha: {
+                from: 1,
+                to: 0,
+                duration: 300
+            }
+        }
+    }
+}
 
 //options for Flash Page
 Flash.options = {

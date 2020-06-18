@@ -1,9 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Feather';
 
-const HomeIcon = Icon.getImageSource('home', 20, '#5EB14E');
-import SellIcon from '../../../assets/icons/sell.png';
-
 const LoadTabs = () => {
     Promise.all([
         Icon.getImageSource('home', 24, '#5EB14E'),

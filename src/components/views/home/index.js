@@ -53,6 +53,21 @@ class Home extends Component {
         })
     }
 
+    navigateToItem = (props) => {
+        Navigation.showModal({
+            stack: {
+                children: [{
+                    component: {
+                        name: 'farmersHub.Item',
+                        passProps: {
+                            text: 'stack with one child'
+                        }
+                    }
+                }]
+            },
+        });
+    }
+
     //display the item on the screen
     displayItems = () => (
         this.state.items.map((item, i) => (
@@ -60,6 +75,7 @@ class Home extends Component {
                 key={`column-${i}`}
                 item={item}
                 iteration={i}
+                navigateTo={this.navigateToItem}
             />
         ))
     )

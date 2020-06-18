@@ -31,7 +31,7 @@ const TemplateItem = (props) => {
                     <View style={styles.itemBlock}>
                         <TouchableOpacity
 
-                            onPress={() => alert('open')}
+                            onPress={() => props.navigateTo(item.block01)}
                         >
                             <View>
                                 {itemImage(item.block01)}
@@ -42,7 +42,7 @@ const TemplateItem = (props) => {
 
                     <View style={styles.itemBlock}>
                         <TouchableOpacity
-                            onPress={() => alert('open')}
+                            onPress={() => props.navigateTo(item.block02)}
                         >
                             <View>
                                 {itemImage(item.block02)}
@@ -61,7 +61,7 @@ const TemplateItem = (props) => {
                     <View style={styles.itemBlock}>
                         <TouchableOpacity
 
-                            onPress={() => alert('open')}
+                            onPress={() => props.navigateTo(item.block01)}
                         >
                             <View>
                                 {itemImage(item.block01)}
