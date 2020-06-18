@@ -60,7 +60,7 @@ class Home extends Component {
                     component: {
                         name: 'farmersHub.Item',
                         passProps: {
-                            text: 'stack with one child'
+                            itemData: props
                         }
                     }
                 }]

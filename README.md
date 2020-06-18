@@ -17,7 +17,7 @@
 - [ ] Configure Firestore
 - [ ] Network Check
 - [ ] Add Item
-- [ ] View Item
+- [x] View Item
 - [ ] Delete Item
 - [ ] Sort
 - [ ] Contact
