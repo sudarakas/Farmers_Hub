@@ -14,9 +14,10 @@
 - [x] Render Items on Home
 - [x] Sort by Category
 - [x] Not Found Page
-- [ ] Configure Firestore
+- [x] Configure Firestore
 - [ ] Network Check
 - [ ] Add Item
+- [ ] Image Upload Animation
 - [x] View Item
 - [ ] Delete Item
 - [ ] Sort

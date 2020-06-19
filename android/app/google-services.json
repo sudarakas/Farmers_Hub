@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "969925507666",
+    "firebase_url": "https://farmershub-d1133.firebaseio.com",
+    "project_id": "farmershub-d1133",
+    "storage_bucket": "farmershub-d1133.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969925507666:android:8900224d87bec1e76a7d8b",
+        "android_client_info": {
+          "package_name": "com.farmershub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969925507666-o9vnmbdiiu9qmrmlqjnhek2k3ffchb4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVSBOED-kqq3BvwWVATCLlljsqxvAUdfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969925507666-o9vnmbdiiu9qmrmlqjnhek2k3ffchb4n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

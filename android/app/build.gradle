@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 
 
+
 import com.android.build.OutputFile
 
 /**
@@ -196,6 +197,9 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation project(':@react-native-community_async-storage')
     compile project(':react-native-vector-icons')
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation project(':react-native-image-picker')
+    compile project(':react-native-uuid-generator')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
@@ -230,3 +234,4 @@ project.ext.vectoricons = [
     iconFontNames: ['Feather.ttf'] // Name of the font files you want to copy
 ]
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply plugin: 'com.google.gms.google-services'
