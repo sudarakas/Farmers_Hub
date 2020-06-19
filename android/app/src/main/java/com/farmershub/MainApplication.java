@@ -11,6 +11,10 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+// import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+// import com.imagepicker.ImagePickerPackage;
+// import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
+
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 
@@ -29,6 +33,9 @@ public class MainApplication extends NavigationApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+          // packages.add(new AsyncStoragePackage()); //deleted due to auto linking
+          //  packages.add(new ImagePickerPackage()); //deleted due to auto linking
+          //  packages.add(new RNUUIDGeneratorPackage()); //deleted due to auto linking
           return packages;
         }
 

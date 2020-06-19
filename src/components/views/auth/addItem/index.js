@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
 import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
 
+import ImagePicker from 'react-native-image-picker'
+import UUIDGenerator from 'react-native-uuid-generator';
+import storage from '@react-native-firebase/storage';
+
 import Input from '../../../util/forms/input';
 import Validation from '../../../util/forms/validation';
 
@@ -92,6 +96,61 @@ class AddItem extends Component {
             form: duplicateForm
         })
 
+    }
+
+    //upload the image to firestore
+    uploadAndReturnFirestoreLink = async (loaclPath, folderPath) => {
+        try {
+            //reference the image folder
+            const imageRef = storage().ref(folderPath);
+            //upload the image to the defined folder
+            await imageRef.putFile(loaclPath, { contentType: 'image/jpg' });
+            //get the image link for adding to the state
+            const url = await imageRef.getDownloadURL();
+            //set the uploadloding as false to confim upload is done
+            this.setState({
+                //loading: false
+            });
+            return url
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    //upload imag and set the image state
+    uploadImageFirestore = () => {
+
+        //define the image uplaod options
+        const options = {
+            title: 'Select Product Image',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        //trigger the image uploader
+        ImagePicker.showImagePicker(options, (response) => {
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else {
+            //set the uploadloding as true to confim upload is started
+                this.setState({
+                   // loading: true
+                });
+
+                //used a UUID generator to generate a random name for the image
+                UUIDGenerator.getRandomUUID((uuid) => {
+                    this.uploadAndReturnFirestoreLink(response.path, 'products/images/' + `${uuid}`).then((url) => {
+                        this.setState({ image: url })
+                    })
+                });
+
+            }
+        });
     }
 
 
