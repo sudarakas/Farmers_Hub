@@ -34,7 +34,6 @@ class Home extends Component {
         })
         //display accroding to the category
         this.props.getItems(category).then(() => {
-            console.log(this.props.Items.list)
             const newItems = generateGridPanel(this.props.Items.list);
             this.setState({
                 loading: false,
@@ -54,6 +53,21 @@ class Home extends Component {
         })
     }
 
+    navigateToItem = (props) => {
+        Navigation.showModal({
+            stack: {
+                children: [{
+                    component: {
+                        name: 'farmersHub.Item',
+                        passProps: {
+                            itemData: props
+                        }
+                    }
+                }]
+            },
+        });
+    }
+
     //display the item on the screen
     displayItems = () => (
         this.state.items.map((item, i) => (
@@ -61,6 +75,7 @@ class Home extends Component {
                 key={`column-${i}`}
                 item={item}
                 iteration={i}
+                navigateTo={this.navigateToItem}
             />
         ))
     )
@@ -87,7 +102,14 @@ class Home extends Component {
                                 <Text style={styles.loadingText}>Please wait ....</Text>
 
                             </View>
-                            : null
+                            :
+                            this.state.items.length ?
+                                null
+                                :
+                                <View style={styles.notFount}>
+                                    <Icon name="alert-circle" style={styles.notFountIcon} />
+                                    <Text style={styles.notFountText}>Sorry! No results found for {this.state.selectedCategory}</Text>
+                                </View>
                     }
 
                     <View style={styles.itemContainer}>
@@ -122,21 +144,38 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
     },
     loading: {
-        flex: 1,
+        //  flex: 1,
         backgroundColor: '#ffffff',
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 150,
+        marginTop: '50%',
     },
     loadingText: {
         fontFamily: "Montserrat-Regular",
-        color: '#A2A2A2'
+        color: '#A2A2A2',
     },
     itemContainer: {
         marginTop: 10,
         padding: 10,
         justifyContent: 'space-between',
 
+    },
+    notFount: {
+        flex: 1,
+        backgroundColor: '#ffffff',
+        paddingTop: '100%',
+        alignItems: 'center'
+    },
+    notFountText: {
+        color: '#000000',
+        fontFamily: "Montserrat-Regular",
+    },
+    notFountIcon: {
+        color: '#5EB14E',
+        fontSize: 30,
+        marginTop: '-50%',
+        marginBottom: 3,
+        fontFamily: "Montserrat-Regular",
     }
 });
 
