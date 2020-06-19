@@ -46,7 +46,7 @@ Home.options = {
 AddItem.options = {
     topBar: {
         title: {
-            text: 'Add Item',
+            text: 'Sell Your Product',
             color: '#000000',
             alignment: 'center',
             fontFamily: 'Montserrat-Bold'
@@ -62,7 +62,7 @@ AddItem.options = {
 UserItems.options = {
     topBar: {
         title: {
-            text: 'Add Item',
+            text: 'Your Products',
             color: '#000000',
             alignment: 'center',
             fontFamily: 'Montserrat-Bold'
