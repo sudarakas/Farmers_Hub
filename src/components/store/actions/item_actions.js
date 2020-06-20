@@ -32,3 +32,9 @@ export function getItems(category) {
         payload: request
     }
 }
+
+export function uploadPostToCloud() {
+    console.log('uploaded')
+    const status = 'success'
+    return status
+}

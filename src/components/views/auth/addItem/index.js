@@ -9,6 +9,8 @@ import storage from '@react-native-firebase/storage';
 import Input from '../../../util/forms/input';
 import Validation from '../../../util/forms/validation';
 
+import { uploadPostToCloud } from "../../../store/actions/item_actions";
+
 class AddItem extends Component {
 
     constructor(props) {
@@ -74,7 +76,7 @@ class AddItem extends Component {
                     isRequired: true
                 }
             },
-            image:{
+            image: {
                 value: ""
             }
         }
@@ -157,6 +159,30 @@ class AddItem extends Component {
         });
     }
 
+    navigateToHome = () => {
+        Navigation.push(this.props.componentId, {
+            component: {
+                name: 'farmersHub.Home', // Push the screen registered with the 'Settings' key
+            }
+        });
+    }
+
+    resetAddProductForm = () => {
+        const duplicateForm = this.state.form;
+
+        for (let key in duplicateForm) {
+            duplicateForm[key].valid = false;
+            duplicateForm[key].value = "";
+        }
+
+        this.setState({
+            hasErrors: false,
+            uploadPost: false
+        })
+
+
+    }
+
     //upload the post to the firebase
     uploadPost = () => {
         let isValidForm = true;
@@ -171,8 +197,15 @@ class AddItem extends Component {
 
         //after check the form validation submit the form to cloud
         if (isValidForm) {
-            //
+            this.props.uploadPostToCloud().then(() => {
+                this.resetAddProductForm
+                this.navigateToHome
+            })
+
         } else {
+            for (let key in duplicateForm) {
+                console.log(this.state.form[key].title, this.state.form[key].value, this.state.form[key].valid)
+            }
             this.setState({ hasErrors: true })
         }
     }
