@@ -10,6 +10,7 @@ import Input from '../../../util/forms/input';
 import Validation from '../../../util/forms/validation';
 
 import { uploadPostToCloud } from "../../../store/actions/item_actions";
+import { LoadTabs } from "../../../views/tabs/index";
 
 class AddItem extends Component {
 
@@ -159,14 +160,17 @@ class AddItem extends Component {
         });
     }
 
+    //switch the user to Home
     navigateToHome = () => {
-        Navigation.push(this.props.componentId, {
-            component: {
-                name: 'farmersHub.Home', // Push the screen registered with the 'Settings' key
+        console.log('ff')
+        Navigation.mergeOptions('BOTTOM_TABS_LAYOUT', {
+            bottomTabs: {
+              currentTabIndex: 0
             }
-        });
+          });
     }
 
+    //reset the form after successfull submission
     resetAddProductForm = () => {
         const duplicateForm = this.state.form;
 
@@ -197,15 +201,9 @@ class AddItem extends Component {
 
         //after check the form validation submit the form to cloud
         if (isValidForm) {
-            this.props.uploadPostToCloud().then(() => {
-                this.resetAddProductForm
-                this.navigateToHome
-            })
+            //to do
 
         } else {
-            for (let key in duplicateForm) {
-                console.log(this.state.form[key].title, this.state.form[key].value, this.state.form[key].valid)
-            }
             this.setState({ hasErrors: true })
         }
     }
