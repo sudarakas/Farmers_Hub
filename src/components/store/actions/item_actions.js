@@ -1,4 +1,4 @@
-import { GET_ITEMS, ADD_ITEMS } from '../type'
+import { GET_ITEMS, ADD_ITEMS, RESET_ITEM, GET_ITEM } from '../type'
 
 import axios from "axios";
 import { FIREBASE_URL } from "../../util/misc";
@@ -46,5 +46,25 @@ export function uploadPostToCloud(data, token) {
     return {
         type: ADD_ITEMS,
         payload: request
+    }
+}
+
+export function getItem(itemID) {
+    const request = axios(`${FIREBASE_URL}/items/${itemID}.json`)
+        .then(response => {
+            let item = { ...response.data, id: itemID }
+            return item;
+        })
+
+    return {
+        type: GET_ITEM,
+        payload: request
+    }
+}
+
+export function clearItemReducers(){
+    return{
+        type: RESET_ITEM,
+        payload: ""
     }
 }

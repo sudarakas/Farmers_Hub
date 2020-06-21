@@ -9,7 +9,7 @@ import storage from '@react-native-firebase/storage';
 import Input from '../../../util/forms/input';
 import Validation from '../../../util/forms/validation';
 
-import { uploadPostToCloud } from "../../../store/actions/item_actions";
+import { uploadPostToCloud, clearItemReducers, getItem } from "../../../store/actions/item_actions";
 import { autoSignIn } from "../../../store/actions/user_actions";
 import { getTokens, storeTokens } from "../../../util/misc";
 
@@ -33,7 +33,7 @@ class AddItem extends Component {
                 name: "category",
                 valid: false,
                 type: "picker",
-                options: ['Select Product Category','Vegetables', 'Meat', 'Fruits', 'Cereals', 'Flowers', 'Others'],
+                options: ['Select Product Category', 'Vegetables', 'Meat', 'Fruits', 'Cereals', 'Flowers', 'Others'],
                 rules: {
                     isRequired: true,
                 }
@@ -60,7 +60,7 @@ class AddItem extends Component {
                 name: "unit",
                 valid: false,
                 type: "picker",
-                options: ['Select Unit','Kg', 'Unit'],
+                options: ['Select Unit', 'Kg', 'Unit'],
                 rules: {
                     isRequired: true,
                 }
@@ -163,7 +163,7 @@ class AddItem extends Component {
             }
         });
     }
-    
+
     navigateToItem = (props) => {
         Navigation.showModal({
             stack: {
@@ -179,8 +179,33 @@ class AddItem extends Component {
         });
     }
 
+    //navigate the user to product page
+    navigateToItem = (props) => {
+        Navigation.showModal({
+            stack: {
+                children: [{
+                    component: {
+                        name: 'farmersHub.Item',
+                        passProps: {
+                            itemData: props
+                        }
+                    }
+                }]
+            },
+        });
+    }
+
+    //get the product data and navigate the user to product
+    viewAddedItem = (itemId) => {
+
+        this.props.getItem(itemId).then((response) => {
+            this.navigateToItem(response.payload)
+        })
+    }
+
+
     //switch the user to Home
-    navigateToHome = () => {
+    navigateToHome = (addedItemId) => {
 
         Navigation.mergeOptions('BOTTOM_TABS_LAYOUT', {
             bottomTabs: {
@@ -188,11 +213,19 @@ class AddItem extends Component {
             }
         });
 
+        //popup an alert for user
         Alert.alert(
             'Success',
             'Product has been added!',
             [
-                { text: 'OK', onPress: () => console.log('OK Pressed') }
+                {
+                    text: 'Cancels',
+                    onPress: () => console.log('OK Pressed')
+                },
+                {
+                    text: 'View Product',
+                    onPress: () => this.viewAddedItem(addedItemId)
+                }
             ],
             { cancelable: true }
         );
@@ -213,6 +246,9 @@ class AddItem extends Component {
             hasErrors: false,
             uploadPost: false
         })
+
+        //clear the reducers
+        this.props.clearItemReducers()
     }
 
     //upload the post to the firebase
@@ -253,9 +289,9 @@ class AddItem extends Component {
                         })
                     })
                 } else {
-                    this.props.uploadPostToCloud(form, value[0][1]).then(() => {
+                    this.props.uploadPostToCloud(form, value[0][1]).then((response) => {
                         this.resetAddProductForm()
-                        this.navigateToHome()
+                        this.navigateToHome(response.payload.name)
                     })
                 }
 
@@ -497,7 +533,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ uploadPostToCloud, autoSignIn }, dispatch)
+    return bindActionCreators({ uploadPostToCloud, autoSignIn, clearItemReducers, getItem }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddItem);

@@ -18,7 +18,7 @@ const Item = (props) => {
         <View style={styles.itemDetailContainer}>
             <View style={styles.itemPriceUnitContainer}>
                 <Text style={styles.itemPrice}>{props.itemData.price} LKR</Text>
-                <Text style={styles.itemUnit}>{props.itemData.unit}</Text>
+                <Text style={styles.itemUnit}>1{props.itemData.unit}</Text>
             </View>
             <Text style={styles.itemTitle}>{props.itemData.title}</Text>
             <Text style={styles.itemDescTitle}>Product Details</Text>
