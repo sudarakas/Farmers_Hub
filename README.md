@@ -16,9 +16,12 @@
 - [x] Not Found Page
 - [x] Configure Firestore
 - [ ] Network Check
-- [ ] Add Item
-- [ ] Image Upload Animation
+- [x] Add Item
+- [x] Add Item Form Validation
+- [x] Redirect User to Product Page
+- [x] Image Upload Animation
 - [x] View Item
+- [x] Open Device Dialer
 - [ ] Delete Item
 - [ ] Sort
 - [ ] Contact

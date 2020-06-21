@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
-import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker'
 import UUIDGenerator from 'react-native-uuid-generator';
@@ -9,8 +9,12 @@ import storage from '@react-native-firebase/storage';
 import Input from '../../../util/forms/input';
 import Validation from '../../../util/forms/validation';
 
-import { uploadPostToCloud } from "../../../store/actions/item_actions";
-import { LoadTabs } from "../../../views/tabs/index";
+import { uploadPostToCloud, clearItemReducers, getItem } from "../../../store/actions/item_actions";
+import { autoSignIn } from "../../../store/actions/user_actions";
+import { getTokens, storeTokens } from "../../../util/misc";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 class AddItem extends Component {
 
@@ -29,7 +33,7 @@ class AddItem extends Component {
                 name: "category",
                 valid: false,
                 type: "picker",
-                options: ['Vegetables', 'Meat', 'Fruits', 'Cereals', 'Flowers', 'Others'],
+                options: ['Select Product Category', 'Vegetables', 'Meat', 'Fruits', 'Cereals', 'Flowers', 'Others'],
                 rules: {
                     isRequired: true,
                 }
@@ -56,7 +60,7 @@ class AddItem extends Component {
                 name: "unit",
                 valid: false,
                 type: "picker",
-                options: ['Kg', 'Unit'],
+                options: ['Select Unit', 'Kg', 'Unit'],
                 rules: {
                     isRequired: true,
                 }
@@ -160,14 +164,73 @@ class AddItem extends Component {
         });
     }
 
+    navigateToItem = (props) => {
+        Navigation.showModal({
+            stack: {
+                children: [{
+                    component: {
+                        name: 'farmersHub.Item',
+                        passProps: {
+                            itemData: props
+                        }
+                    }
+                }]
+            },
+        });
+    }
+
+    //navigate the user to product page
+    navigateToItem = (props) => {
+        Navigation.showModal({
+            stack: {
+                children: [{
+                    component: {
+                        name: 'farmersHub.Item',
+                        passProps: {
+                            itemData: props
+                        }
+                    }
+                }]
+            },
+        });
+    }
+
+    //get the product data and navigate the user to product
+    viewAddedItem = (itemId) => {
+
+        this.props.getItem(itemId).then((response) => {
+            this.navigateToItem(response.payload)
+        })
+    }
+
+
     //switch the user to Home
-    navigateToHome = () => {
-        console.log('ff')
+    navigateToHome = (addedItemId) => {
+
         Navigation.mergeOptions('BOTTOM_TABS_LAYOUT', {
             bottomTabs: {
-              currentTabIndex: 0
+                currentTabIndex: 0
             }
-          });
+        });
+
+        //popup an alert for user
+        Alert.alert(
+            'Success',
+            'Product has been added!',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('OK Pressed')
+                },
+                {
+                    text: 'View Product',
+                    onPress: () => this.viewAddedItem(addedItemId)
+                }
+            ],
+            { cancelable: true }
+        );
+
+
     }
 
     //reset the form after successfull submission
@@ -184,7 +247,8 @@ class AddItem extends Component {
             uploadPost: false
         })
 
-
+        //clear the reducers
+        this.props.clearItemReducers()
     }
 
     //upload the post to the firebase
@@ -201,7 +265,37 @@ class AddItem extends Component {
 
         //after check the form validation submit the form to cloud
         if (isValidForm) {
-            //to do
+            getTokens((value) => {
+                //get the current date and time
+                const currentDate = new Date();
+                //get the timestamp
+                const expiration = currentDate.getTime();
+                //combine the form with user id
+                const form = {
+                    ...submitForm,
+                    uid: value[3][1]
+                }
+                //check the stored token is expired or not
+                //if expired, used auto login to refresh the token
+                //otherwise submit the form
+
+                if (expiration > value[2][1]) {
+                    this.props.autoSignIn(value[1][1]).then(() => {
+                        //update the new token
+                        storeTokens(this.props.User.userData, () => {
+                            this.props.uploadPostToCloud(form, this.props.User.userData.token).then(() => {
+                                this.navigateToHome()
+                            })
+                        })
+                    })
+                } else {
+                    this.props.uploadPostToCloud(form, value[0][1]).then((response) => {
+                        this.resetAddProductForm()
+                        this.navigateToHome(response.payload.name)
+                    })
+                }
+
+            })
 
         } else {
             this.setState({ hasErrors: true })
@@ -320,12 +414,24 @@ class AddItem extends Component {
                 }
 
                 <View style={styles.itemContactButtonContainer}>
-                    <TouchableOpacity
-                        style={styles.itemContactButton}
-                        onPress={this.uploadPost}
-                    >
-                        <Text style={styles.itemContactButtonText}>Sell Product</Text>
-                    </TouchableOpacity>
+                    {
+                        this.state.postUpload ?
+                            <View style={styles.imageUploadLoading}>
+                                <ActivityIndicator
+                                    size="small"
+                                    color="#5EB14E"
+                                />
+                                <Text style={styles.imageUploadLoadingText}>Please wait... your post is submitting</Text>
+                            </View>
+                            :
+                            <TouchableOpacity
+                                style={styles.itemContactButton}
+                                onPress={this.uploadPost}
+                            >
+                                <Text style={styles.itemContactButtonText}>Sell Product</Text>
+                            </TouchableOpacity>
+                    }
+
                 </View>
 
             </ScrollView>
@@ -419,4 +525,15 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddItem;
+function mapStateToProps(state) {
+    return {
+        Items: state.Item,
+        User: state.User
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ uploadPostToCloud, autoSignIn, clearItemReducers, getItem }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddItem);

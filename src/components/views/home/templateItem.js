@@ -6,7 +6,7 @@ const TemplateItem = (props) => {
     const itemText = (item) => (
         <View style={styles.itemTextContainer}>
             <Text style={styles.itemTextTitle}>{item.title}</Text>
-            <Text style={styles.itemTextUnit}>{item.unit}</Text>
+            <Text style={styles.itemTextUnit}>1{item.unit}</Text>
             <Text style={styles.itemTextPrice}>{item.price} LKR</Text>
         </View>
     )
