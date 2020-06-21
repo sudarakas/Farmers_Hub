@@ -219,7 +219,7 @@ class AddItem extends Component {
             'Product has been added!',
             [
                 {
-                    text: 'Cancels',
+                    text: 'Cancel',
                     onPress: () => console.log('OK Pressed')
                 },
                 {
