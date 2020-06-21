@@ -10,7 +10,11 @@ import Input from '../../../util/forms/input';
 import Validation from '../../../util/forms/validation';
 
 import { uploadPostToCloud } from "../../../store/actions/item_actions";
-import { LoadTabs } from "../../../views/tabs/index";
+import { autoSignIn } from "../../../store/actions/user_actions";
+import { getTokens, storeTokens } from "../../../util/misc";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 class AddItem extends Component {
 
@@ -162,12 +166,11 @@ class AddItem extends Component {
 
     //switch the user to Home
     navigateToHome = () => {
-        console.log('ff')
         Navigation.mergeOptions('BOTTOM_TABS_LAYOUT', {
             bottomTabs: {
-              currentTabIndex: 0
+                currentTabIndex: 0
             }
-          });
+        });
     }
 
     //reset the form after successfull submission
@@ -201,7 +204,26 @@ class AddItem extends Component {
 
         //after check the form validation submit the form to cloud
         if (isValidForm) {
-            //to do
+            getTokens((value) => {
+                //get the current date and time
+                const currentDate = new Date();
+                //get the timestamp
+                const expiration = currentDate.getTime();
+                //combine the form with user id
+                const form = {
+                    ...submitForm,
+                    uid: value[3][1]
+                }
+                //check the stored token is expired or not
+                //if expire used auto log to refresh the token
+                //otherwise submit the form
+                if(expiration > value[2[1]]){
+                    alert('auto')
+                }else{
+                    alert('post me')
+                }
+
+            })
 
         } else {
             this.setState({ hasErrors: true })
@@ -320,12 +342,24 @@ class AddItem extends Component {
                 }
 
                 <View style={styles.itemContactButtonContainer}>
-                    <TouchableOpacity
-                        style={styles.itemContactButton}
-                        onPress={this.uploadPost}
-                    >
-                        <Text style={styles.itemContactButtonText}>Sell Product</Text>
-                    </TouchableOpacity>
+                    {
+                        this.state.postUpload ?
+                            <View style={styles.imageUploadLoading}>
+                                <ActivityIndicator
+                                    size="small"
+                                    color="#5EB14E"
+                                />
+                                <Text style={styles.imageUploadLoadingText}>Please wait... your post is submitting</Text>
+                            </View>
+                            :
+                            <TouchableOpacity
+                                style={styles.itemContactButton}
+                                onPress={this.uploadPost}
+                            >
+                                <Text style={styles.itemContactButtonText}>Sell Product</Text>
+                            </TouchableOpacity>
+                    }
+
                 </View>
 
             </ScrollView>
@@ -419,4 +453,15 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddItem;
+function mapStateToProps(state) {
+    return {
+        Items: state.Item,
+        User: state.User
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ uploadPostToCloud, autoSignIn }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddItem);

@@ -1,4 +1,4 @@
-import { GET_ITEMS } from '../type'
+import { GET_ITEMS, ADD_ITEMS } from '../type'
 
 import axios from "axios";
 import { FIREBASE_URL } from "../../util/misc";
@@ -33,8 +33,18 @@ export function getItems(category) {
     }
 }
 
-export function uploadPostToCloud() {
-    console.log('uploaded')
-    const status = 'success'
-    return status
+export function uploadPostToCloud(data, token) {
+
+    const request = axios({
+        method: 'POST',
+        url: `${FIREBASE_URL}/items.json?auth=${token}`,
+        data
+    }).then(response => {
+        return response.data
+    })
+
+    return {
+        type: ADD_ITEMS,
+        payload: request
+    }
 }
