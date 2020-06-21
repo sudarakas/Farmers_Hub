@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
-import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker'
 import UUIDGenerator from 'react-native-uuid-generator';
@@ -8,6 +8,9 @@ import storage from '@react-native-firebase/storage';
 
 import Input from '../../../util/forms/input';
 import Validation from '../../../util/forms/validation';
+
+import { uploadPostToCloud } from "../../../store/actions/item_actions";
+import { LoadTabs } from "../../../views/tabs/index";
 
 class AddItem extends Component {
 
@@ -18,6 +21,8 @@ class AddItem extends Component {
 
     state = {
         hasErrors: false,
+        imageUpload: false,
+        postUpload: false,
         form: {
             category: {
                 value: "",
@@ -72,7 +77,9 @@ class AddItem extends Component {
                     isRequired: true
                 }
             },
-            image: null
+            image: {
+                value: ""
+            }
         }
     }
 
@@ -109,7 +116,7 @@ class AddItem extends Component {
             const url = await imageRef.getDownloadURL();
             //set the uploadloding as false to confim upload is done
             this.setState({
-                //loading: false
+                imageUpload: false
             });
             return url
         } catch (e) {
@@ -137,15 +144,15 @@ class AddItem extends Component {
             } else if (response.error) {
                 console.log('ImagePicker Error: ', response.error);
             } else {
-            //set the uploadloding as true to confim upload is started
+                //set the uploadloding as true to confim upload is started
                 this.setState({
-                   // loading: true
+                    imageUpload: true
                 });
 
                 //used a UUID generator to generate a random name for the image
                 UUIDGenerator.getRandomUUID((uuid) => {
                     this.uploadAndReturnFirestoreLink(response.path, 'products/images/' + `${uuid}`).then((url) => {
-                        this.setState({ image: url })
+                        this.updateInput("image", url)
                     })
                 });
 
@@ -153,6 +160,53 @@ class AddItem extends Component {
         });
     }
 
+    //switch the user to Home
+    navigateToHome = () => {
+        console.log('ff')
+        Navigation.mergeOptions('BOTTOM_TABS_LAYOUT', {
+            bottomTabs: {
+              currentTabIndex: 0
+            }
+          });
+    }
+
+    //reset the form after successfull submission
+    resetAddProductForm = () => {
+        const duplicateForm = this.state.form;
+
+        for (let key in duplicateForm) {
+            duplicateForm[key].valid = false;
+            duplicateForm[key].value = "";
+        }
+
+        this.setState({
+            hasErrors: false,
+            uploadPost: false
+        })
+
+
+    }
+
+    //upload the post to the firebase
+    uploadPost = () => {
+        let isValidForm = true;
+        let submitForm = {};
+        const duplicateForm = this.state.form;
+
+        //loop the each element and check the validations
+        for (let key in duplicateForm) {
+            isValidForm = isValidForm && duplicateForm[key].valid
+            submitForm[key] = this.state.form[key].value
+        }
+
+        //after check the form validation submit the form to cloud
+        if (isValidForm) {
+            //to do
+
+        } else {
+            this.setState({ hasErrors: true })
+        }
+    }
 
     render() {
         return (
@@ -207,6 +261,7 @@ class AddItem extends Component {
                             overrideStyle={{ fontSize: 16 }}
                             style={styles.inputText}
                             onChangeText={value => this.updateInput("price", value)}
+                            keyboardType={"numeric"}
                         />
                     </View>
 
@@ -240,14 +295,38 @@ class AddItem extends Component {
 
                 </View>
 
+                <View>
+                    {this.state.imageUpload ? (
+                        <View style={styles.imageUploadLoading}>
+                            <ActivityIndicator
+                                size="small"
+                                color="#5EB14E"
+                            />
+                            <Text style={styles.imageUploadLoadingText}>Please wait... Image is uploading</Text>
+                        </View>
+                    ) : (
+                            null
+                        )}
+                </View>
+
+                {
+                    //show form errors
+                    this.state.hasErrors ?
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorMessage}> Oops! Please check your inputs.</Text>
+                        </View>
+                        :
+                        null
+                }
+
                 <View style={styles.itemContactButtonContainer}>
-            <TouchableOpacity
-                style={styles.itemContactButton}
-                onPress={() => { this.uploadPost}}
-            >
-                <Text style={styles.itemContactButtonText}>Sell Product</Text>
-            </TouchableOpacity>
-        </View>
+                    <TouchableOpacity
+                        style={styles.itemContactButton}
+                        onPress={this.uploadPost}
+                    >
+                        <Text style={styles.itemContactButtonText}>Sell Product</Text>
+                    </TouchableOpacity>
+                </View>
 
             </ScrollView>
         )
@@ -292,9 +371,9 @@ const styles = StyleSheet.create({
     inputText: {
         marginBottom: 20,
     },
-    imageUpload:{
+    imageUpload: {
         marginTop: 5,
-        marginBottom: 10, 
+        marginBottom: 10,
         fontSize: 18,
         color: '#5EB14E',
         fontFamily: "Montserrat-Regular",
@@ -311,12 +390,31 @@ const styles = StyleSheet.create({
         marginTop: 20,
         paddingVertical: 20,
         borderRadius: 10,
-        width: '90%'
+        width: '80%'
     },
     itemContactButtonText: {
         textAlign: 'center',
         fontSize: 20,
         color: '#ffffff',
+        fontFamily: "Montserrat-Bold",
+    },
+    imageUploadLoading: {
+        alignContent: 'center',
+    },
+    imageUploadLoadingText: {
+        textAlign: 'center',
+        color: '#A2A2A2',
+        fontSize: 12,
+        fontFamily: "Montserrat-Light",
+    },
+    errorContainer: {
+        alignContent: 'center',
+        marginTop: 10
+    },
+    errorMessage: {
+        textAlign: 'center',
+        color: '#E0002F',
+        fontSize: 12,
         fontFamily: "Montserrat-Bold",
     }
 });
