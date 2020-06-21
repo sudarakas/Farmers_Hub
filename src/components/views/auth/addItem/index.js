@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
-import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker'
 import UUIDGenerator from 'react-native-uuid-generator';
@@ -33,7 +33,7 @@ class AddItem extends Component {
                 name: "category",
                 valid: false,
                 type: "picker",
-                options: ['Vegetables', 'Meat', 'Fruits', 'Cereals', 'Flowers', 'Others'],
+                options: ['Select Product Category','Vegetables', 'Meat', 'Fruits', 'Cereals', 'Flowers', 'Others'],
                 rules: {
                     isRequired: true,
                 }
@@ -60,7 +60,7 @@ class AddItem extends Component {
                 name: "unit",
                 valid: false,
                 type: "picker",
-                options: ['Kg', 'Unit'],
+                options: ['Select Unit','Kg', 'Unit'],
                 rules: {
                     isRequired: true,
                 }
@@ -163,14 +163,41 @@ class AddItem extends Component {
             }
         });
     }
+    
+    navigateToItem = (props) => {
+        Navigation.showModal({
+            stack: {
+                children: [{
+                    component: {
+                        name: 'farmersHub.Item',
+                        passProps: {
+                            itemData: props
+                        }
+                    }
+                }]
+            },
+        });
+    }
 
     //switch the user to Home
     navigateToHome = () => {
+
         Navigation.mergeOptions('BOTTOM_TABS_LAYOUT', {
             bottomTabs: {
                 currentTabIndex: 0
             }
         });
+
+        Alert.alert(
+            'Success',
+            'Product has been added!',
+            [
+                { text: 'OK', onPress: () => console.log('OK Pressed') }
+            ],
+            { cancelable: true }
+        );
+
+
     }
 
     //reset the form after successfull submission
@@ -186,8 +213,6 @@ class AddItem extends Component {
             hasErrors: false,
             uploadPost: false
         })
-
-
     }
 
     //upload the post to the firebase
@@ -215,12 +240,23 @@ class AddItem extends Component {
                     uid: value[3][1]
                 }
                 //check the stored token is expired or not
-                //if expire used auto log to refresh the token
+                //if expired, used auto login to refresh the token
                 //otherwise submit the form
-                if(expiration > value[2[1]]){
-                    alert('auto')
-                }else{
-                    alert('post me')
+
+                if (expiration > value[2][1]) {
+                    this.props.autoSignIn(value[1][1]).then(() => {
+                        //update the new token
+                        storeTokens(this.props.User.userData, () => {
+                            this.props.uploadPostToCloud(form, this.props.User.userData.token).then(() => {
+                                this.navigateToHome()
+                            })
+                        })
+                    })
+                } else {
+                    this.props.uploadPostToCloud(form, value[0][1]).then(() => {
+                        this.resetAddProductForm()
+                        this.navigateToHome()
+                    })
                 }
 
             })
