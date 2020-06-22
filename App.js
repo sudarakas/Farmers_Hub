@@ -40,6 +40,9 @@ Home.options = {
         },
         elevation: 0,
     },
+    navigationBar: {
+        backgroundColor: '#5EB14E',
+    }
 }
 
 //options for AddItem Page

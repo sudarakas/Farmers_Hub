@@ -1,6 +1,6 @@
-import { REGISTER_USER, LOGIN_USER, AUTO_SIGN_IN } from "../type";
+import { REGISTER_USER, LOGIN_USER, AUTO_SIGN_IN, GET_USER_ITEMS } from "../type";
 import axios from "axios";
-import { SIGNUP_URL, SIGNIN_URL, REFRESH_TOKEN_URL } from '../../util/misc';
+import { SIGNUP_URL, SIGNIN_URL, REFRESH_TOKEN_URL, FIREBASE_URL } from '../../util/misc';
 
 export function signUp(data) {
 
@@ -70,6 +70,28 @@ export function autoSignIn(refToken) {
 
     return {
         type: AUTO_SIGN_IN,
+        payload: request
+    }
+}
+
+export function getUserItems(UID) {
+    const request = axios(`${FIREBASE_URL}/items.json?orderBy=\"uid\"&equalTo=\"${UID}\"`)
+        .then(response => {
+
+            let items = [];
+
+            for (let key in response.data) {
+                items.push({
+                    ...response.data[key],
+                    id: key
+                })
+            }
+
+            return items;
+        })
+
+    return {
+        type: GET_USER_ITEMS,
         payload: request
     }
 }

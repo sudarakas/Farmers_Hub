@@ -87,12 +87,21 @@ class SideMenu extends Component {
                   children: [{
                     component: {
                       name: 'farmersHub.UserItems',
-                    }
+                      options: {
+                        topBar: {
+                            backButton: {
+                                visible: false
+                            }
+                        }
+                      }
+                    },
                   }]
                 }
               });
         }
     }
+
+    
 
 
     render() {
