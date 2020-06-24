@@ -19,6 +19,7 @@
 - [x] Add Item
 - [x] Add Item Form Validation
 - [x] Redirect User to Product Page
+- [x] User Products Template
 - [x] Image Upload Animation
 - [x] View Item
 - [x] Open Device Dialer

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableWithoutFeedback } from 'react-native';
 
 import Input from '../../util/forms/input';
 import Validation from '../../util/forms/validation';
@@ -222,12 +222,12 @@ class LoginForm extends Component {
                 {this.showFormErrors()}
 
                 <View>
-                    <TouchableOpacity
+                    <TouchableWithoutFeedback
                         style={styles.button}
                         onPress={this.submitUserForm}
                     >
                         <Text style={styles.buttonText}>{this.state.action}</Text>
-                    </TouchableOpacity>
+                    </TouchableWithoutFeedback>
                 </View>
 
                 <View>

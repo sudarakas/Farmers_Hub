@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, AUTO_SIGN_IN } from "../type";
+import { REGISTER_USER, LOGIN_USER, AUTO_SIGN_IN, GET_USER_ITEMS } from "../type";
 
 export default function (state = {}, action) {
     switch (action.type) {
@@ -27,6 +27,11 @@ export default function (state = {}, action) {
                     token: action.payload.id_token || false,
                     refToken: action.payload.refresh_token || false
                 }
+            }
+            break;
+        case GET_USER_ITEMS:
+            return {
+                ...state, userItems: action.payload
             }
             break;
         default:
