@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
-import { StyleSheet, View, Text, ScrollView, Image, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import Modal from 'react-native-modal';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -13,7 +14,10 @@ class UserItems extends Component {
         super(props);
 
         this.state = {
-            items: []
+            items: [],
+            isModalVisible: false,
+            setModalVisible: false,
+            deleteProduct: ''
         }
     }
 
@@ -30,6 +34,18 @@ class UserItems extends Component {
             })
         }
     }
+
+    //modal dismiss
+    toggleModal = () => {
+        this.setState({ setModalVisible: false })
+    };
+
+    confirmDelete = (productId) => {
+        this.setState({
+            setModalVisible: true,
+            deleteProduct: productId
+        })
+    };
 
     showUserItems = (items) => (
         items ?
@@ -51,7 +67,7 @@ class UserItems extends Component {
                         <View style={styles.delete}>
                             <TouchableWithoutFeedback
                                 style={styles.deleteButton}
-                                onPress={() => alert('delete')}
+                                onPress={() => this.confirmDelete(item.id)}
                             >
                                 <Text style={styles.deleteText}>Delete</Text>
                             </TouchableWithoutFeedback>
@@ -72,6 +88,34 @@ class UserItems extends Component {
 
                     {this.showUserItems(this.state.items)}
 
+                    {/* delete modal */}
+
+                    {
+                        this.state.setModalVisible ?
+
+                            <View style={{ flex: 1 }}>
+                                <Modal
+                                    isVisible={true}
+                                    animationIn='slideInUp'
+                                    style={styles.modal}
+                                    onSwipeComplete={this.toggleModal}
+                                    swipeDirection={['up', 'left', 'right', 'down']}
+                                >
+                                    <View style={styles.modalContainer}>
+                                        <Text style={styles.topText}>Delete! Are you sure?</Text>
+                                        <Text style={styles.bottomText}>You won't be able to undo this action.</Text>
+                                        <TouchableOpacity
+                                            style={styles.deleteConfirmButton}
+                                            onPress={() => alert('don')}
+                                        >
+                                            <Text style={styles.deleteConfirmButtonText}>Delete Product</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </Modal>
+                            </View>
+
+                            : null
+                    }
                 </View>
             </ScrollView>
         )
@@ -144,7 +188,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         margin: 5,
     },
-    delete:{
+    delete: {
         backgroundColor: '#E0002F',
         padding: 5,
         borderRadius: 7,
@@ -152,7 +196,45 @@ const styles = StyleSheet.create({
     deleteText: {
         color: '#ffffff',
         paddingHorizontal: 35
-    }
+    },
+    modal: {
+        justifyContent: 'flex-end',
+        margin: 0
+    },
+    modalContainer: {
+        backgroundColor: 'white',
+        padding: 22,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+    },
+    deleteConfirmButton: {
+        backgroundColor: "#E0002F",
+        borderRadius: 3,
+    },
+    deleteConfirmButtonText: {
+        textAlign: 'center',
+        fontSize: 15,
+        color: '#ffffff',
+        marginHorizontal: 15,
+        marginVertical: 5,
+        fontFamily: "Montserrat-Bold",
+    },
+    topText: {
+        textAlign: 'center',
+        color: '#E0002F',
+        fontSize: 18,
+        fontFamily: "Montserrat-Light",
+    },
+    bottomText: {
+        textAlign: 'center',
+        color: '#000000',
+        fontSize: 12,
+        fontFamily: "Montserrat-Light",
+        marginBottom: 13,
+        letterSpacing: 3
+    },
 });
 
 function mapStateToProps(state) {

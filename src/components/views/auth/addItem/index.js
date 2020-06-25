@@ -168,22 +168,6 @@ class AddItem extends Component {
         });
     }
 
-    // //navigate to the product
-    // navigateToItem = (props) => {
-    //     Navigation.showModal({
-    //         stack: {
-    //             children: [{
-    //                 component: {
-    //                     name: 'farmersHub.Item',
-    //                     passProps: {
-    //                         itemData: props
-    //                     }
-    //                 }
-    //             }]
-    //         },
-    //     });
-    // }
-
     //navigate the user to product page
     navigateToItem = (props) => {
         Navigation.showModal({
@@ -424,21 +408,11 @@ class AddItem extends Component {
                             <Modal
                                 isVisible={true}
                                 animationIn='slideInUp'
-                                style={{
-                                    justifyContent: 'flex-end',
-                                    margin: 0
-                                }}
+                                style={styles.modal}
                                 onSwipeComplete={this.toggleModal}
                                 swipeDirection={['up', 'left', 'right', 'down']}
                             >
-                                <View style={{
-                                    backgroundColor: 'white',
-                                    padding: 22,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    borderRadius: 4,
-                                    borderColor: 'rgba(0, 0, 0, 0.1)',
-                                }}>
+                                <View style={styles.modalContainer}>
                                     <Text style={styles.topText}>Congratulations!</Text>
                                     <Text style={styles.bottomText}>Your product is now online.</Text>
                                     <TouchableOpacity
@@ -578,19 +552,31 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         fontFamily: "Montserrat-Bold",
     },
-    topText:{
+    topText: {
         textAlign: 'center',
         color: '#000000',
         fontSize: 25,
         fontFamily: "Montserrat-Light",
     },
-    bottomText:{
+    bottomText: {
         textAlign: 'center',
         color: '#000000',
         fontSize: 15,
         fontFamily: "Montserrat-Light",
         marginBottom: 10,
         letterSpacing: 3
+    },
+    modal: {
+        justifyContent: 'flex-end',
+        margin: 0
+    },
+    modalContainer: {
+        backgroundColor: 'white',
+        padding: 22,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
     }
 });
 
