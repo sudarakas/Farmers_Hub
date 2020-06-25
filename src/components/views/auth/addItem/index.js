@@ -168,21 +168,21 @@ class AddItem extends Component {
         });
     }
 
-    //navigate to the product
-    navigateToItem = (props) => {
-        Navigation.showModal({
-            stack: {
-                children: [{
-                    component: {
-                        name: 'farmersHub.Item',
-                        passProps: {
-                            itemData: props
-                        }
-                    }
-                }]
-            },
-        });
-    }
+    // //navigate to the product
+    // navigateToItem = (props) => {
+    //     Navigation.showModal({
+    //         stack: {
+    //             children: [{
+    //                 component: {
+    //                     name: 'farmersHub.Item',
+    //                     passProps: {
+    //                         itemData: props
+    //                     }
+    //                 }
+    //             }]
+    //         },
+    //     });
+    // }
 
     //navigate the user to product page
     navigateToItem = (props) => {
@@ -202,7 +202,7 @@ class AddItem extends Component {
 
     //get the product data and navigate the user to product
     viewAddedItem = () => {
-        this.props.getItem(this.addedItemId).then((response) => {
+        this.props.getItem(this.state.addedItemId).then((response) => {
             this.navigateToItem(response.payload)
         })
     }
