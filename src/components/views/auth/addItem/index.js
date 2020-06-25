@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
-import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, TouchableOpacity, ActivityIndicator, Button } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker'
 import UUIDGenerator from 'react-native-uuid-generator';
 import storage from '@react-native-firebase/storage';
+import Modal from 'react-native-modal';
 
 import Input from '../../../util/forms/input';
 import Validation from '../../../util/forms/validation';
@@ -27,6 +28,9 @@ class AddItem extends Component {
         hasErrors: false,
         imageUpload: false,
         postUpload: false,
+        isModalVisible: false,
+        setModalVisible: false,
+        addedItemId: '',
         form: {
             category: {
                 value: "",
@@ -164,6 +168,7 @@ class AddItem extends Component {
         });
     }
 
+    //navigate to the product
     navigateToItem = (props) => {
         Navigation.showModal({
             stack: {
@@ -196,16 +201,19 @@ class AddItem extends Component {
     }
 
     //get the product data and navigate the user to product
-    viewAddedItem = (itemId) => {
-
-        this.props.getItem(itemId).then((response) => {
+    viewAddedItem = () => {
+        this.props.getItem(this.addedItemId).then((response) => {
             this.navigateToItem(response.payload)
         })
     }
 
+    //modal dismiss
+    toggleModal = () => {
+        this.setState({ setModalVisible: false })
+    };
 
     //switch the user to Home
-    navigateToHome = (addedItemId) => {
+    navigateToHome = () => {
 
         Navigation.mergeOptions('BOTTOM_TABS_LAYOUT', {
             bottomTabs: {
@@ -213,24 +221,15 @@ class AddItem extends Component {
             }
         });
 
-        //popup an alert for user
-        Alert.alert(
-            'Success',
-            'Product has been added!',
-            [
-                {
-                    text: 'Cancel',
-                    onPress: () => console.log('OK Pressed')
-                },
-                {
-                    text: 'View Product',
-                    onPress: () => this.viewAddedItem(addedItemId)
-                }
-            ],
-            { cancelable: true }
-        );
+    }
 
-
+    //modal for notification
+    modalActionHandler = (itemId) => {
+        this.setState({
+            setModalVisible: true,
+            isModalVisible: true,
+            addedItemId: itemId
+        })
     }
 
     //reset the form after successfull submission
@@ -283,15 +282,19 @@ class AddItem extends Component {
                     this.props.autoSignIn(value[1][1]).then(() => {
                         //update the new token
                         storeTokens(this.props.User.userData, () => {
-                            this.props.uploadPostToCloud(form, this.props.User.userData.token).then(() => {
+                            this.props.uploadPostToCloud(form, this.props.User.userData.token).then((response) => {
+                                this.resetAddProductForm()
                                 this.navigateToHome()
+                                this.modalActionHandler(response.payload.name)
                             })
                         })
                     })
                 } else {
                     this.props.uploadPostToCloud(form, value[0][1]).then((response) => {
                         this.resetAddProductForm()
-                        this.navigateToHome(response.payload.name)
+                        this.navigateToHome()
+                        this.modalActionHandler(response.payload.name)
+
                     })
                 }
 
@@ -379,6 +382,7 @@ class AddItem extends Component {
                             value={this.state.form.contact.value}
                             overrideStyle={{ fontSize: 16 }}
                             style={styles.inputText}
+                            keyboardType={"phone-pad"}
                             onChangeText={value => this.updateInput("contact", value)}
                         />
                     </View>
@@ -413,7 +417,46 @@ class AddItem extends Component {
                         null
                 }
 
-                <View style={styles.itemContactButtonContainer}>
+                {
+                    this.state.setModalVisible ?
+
+                        <View style={{ flex: 1 }}>
+                            <Modal
+                                isVisible={true}
+                                animationIn='slideInUp'
+                                style={{
+                                    justifyContent: 'flex-end',
+                                    margin: 0
+                                }}
+                                onSwipeComplete={this.toggleModal}
+                                swipeDirection={['up', 'left', 'right', 'down']}
+                            >
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    padding: 22,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderRadius: 4,
+                                    borderColor: 'rgba(0, 0, 0, 0.1)',
+                                }}>
+                                    <Text style={styles.topText}>Congratulations!</Text>
+                                    <Text style={styles.bottomText}>Your product is now online.</Text>
+                                    <TouchableOpacity
+                                        style={styles.viewAddedItemButton}
+                                        onPress={this.viewAddedItem}
+                                    >
+                                        <Text style={styles.viewAddedItemButtonText}>View Product</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </Modal>
+                        </View>
+
+                        : null
+                }
+
+
+
+                <View style={styles.itemSellButtonContainer}>
                     {
                         this.state.postUpload ?
                             <View style={styles.imageUploadLoading}>
@@ -425,10 +468,10 @@ class AddItem extends Component {
                             </View>
                             :
                             <TouchableOpacity
-                                style={styles.itemContactButton}
+                                style={styles.itemSellButton}
                                 onPress={this.uploadPost}
                             >
-                                <Text style={styles.itemContactButtonText}>Sell Product</Text>
+                                <Text style={styles.itemSellButtonText}>Sell Product</Text>
                             </TouchableOpacity>
                     }
 
@@ -485,20 +528,20 @@ const styles = StyleSheet.create({
         fontFamily: "Montserrat-Regular",
 
     },
-    itemContactButtonContainer: {
+    itemSellButtonContainer: {
         flex: 1,
         alignItems: "center",
         justifyContent: 'center',
         marginVertical: 15,
     },
-    itemContactButton: {
+    itemSellButton: {
         backgroundColor: "#5EB14E",
         marginTop: 20,
         paddingVertical: 20,
         borderRadius: 10,
         width: '80%'
     },
-    itemContactButtonText: {
+    itemSellButtonText: {
         textAlign: 'center',
         fontSize: 20,
         color: '#ffffff',
@@ -522,6 +565,32 @@ const styles = StyleSheet.create({
         color: '#E0002F',
         fontSize: 12,
         fontFamily: "Montserrat-Bold",
+    },
+    viewAddedItemButton: {
+        backgroundColor: "#5EB14E",
+        borderRadius: 3,
+    },
+    viewAddedItemButtonText: {
+        textAlign: 'center',
+        fontSize: 15,
+        color: '#ffffff',
+        marginHorizontal: 15,
+        marginVertical: 5,
+        fontFamily: "Montserrat-Bold",
+    },
+    topText:{
+        textAlign: 'center',
+        color: '#000000',
+        fontSize: 25,
+        fontFamily: "Montserrat-Light",
+    },
+    bottomText:{
+        textAlign: 'center',
+        color: '#000000',
+        fontSize: 15,
+        fontFamily: "Montserrat-Light",
+        marginBottom: 10,
+        letterSpacing: 3
     }
 });
 
