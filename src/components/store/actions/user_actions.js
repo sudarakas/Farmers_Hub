@@ -1,6 +1,6 @@
 import { REGISTER_USER, LOGIN_USER, AUTO_SIGN_IN, GET_USER_ITEMS, DELETE_USER_ITEM } from "../type";
 import axios from "axios";
-import { SIGNUP_URL, SIGNIN_URL, REFRESH_TOKEN_URL, FIREBASE_URL } from '../../util/misc';
+import { SIGNUP_URL, SIGNIN_URL, REFRESH_TOKEN_URL, FIREBASE_URL, storeTokens } from '../../util/misc';
 
 export function signUp(data) {
 
@@ -109,8 +109,34 @@ export const deleteUserItem = (itemId, UDATA) => {
             resolve({
                 deleteItem: true
             })
+            //if exiting user token is not a valid token
+            //use autoSignIn and refresh the token then
+            //delete the item
         }).catch(e => {
+            const userSign = autoSignIn(UDATA.refToken);
 
+            //fetch the new user token details
+            userSign.payload.then(response => {
+                let updatedUserData = {
+                    uid: response.user_id,
+                    token: response.id_token,
+                    refToken: response.refresh_token
+                }
+
+                //update the local storage and
+                //delete the post
+                storeTokens(updatedUserData, () => {
+                    axios({
+                        method: 'DELETE',
+                        url: `${URL}?auth=${UDATA.token}`
+                    }).then(() => {
+                        resolve({
+                            userData: updatedUserData,
+                            deleteItem: true
+                        })
+                    })
+                })
+            })
         })
     })
 
