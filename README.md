@@ -30,6 +30,6 @@
 - [x] Delete Item with Refresh Token
 - [x] Sort
 - [ ] Contact
-- [ ] Add Icon
+- [x] Add Icon
 - [ ] UI Improvements
 - [ ] Add New Icon
