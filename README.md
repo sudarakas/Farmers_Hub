@@ -23,8 +23,10 @@
 - [x] Image Upload Animation
 - [x] View Item
 - [x] Open Device Dialer
-- [ ] Attach User UID to Item
-- [ ] User's Item
-- [ ] Delete Item
-- [ ] Sort
+- [x] Attach User UID to Item
+- [x] User's Item
+- [x] Delete Item
+- [x] Delete Item with Refresh Token
+- [x] Sort
 - [ ] Contact
+- [ ] Add Icon
