@@ -21,6 +21,7 @@
 - [x] Redirect User to Product Page
 - [x] User Products Template
 - [x] Image Upload Animation
+- [ ] Add Auth for Image Upload
 - [x] View Item
 - [x] Open Device Dialer
 - [x] Attach User UID to Item
@@ -30,3 +31,5 @@
 - [x] Sort
 - [ ] Contact
 - [ ] Add Icon
+- [ ] UI Improvements
+- [ ] Add New Icon
