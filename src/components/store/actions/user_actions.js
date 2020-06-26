@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, AUTO_SIGN_IN, GET_USER_ITEMS } from "../type";
+import { REGISTER_USER, LOGIN_USER, AUTO_SIGN_IN, GET_USER_ITEMS, DELETE_USER_ITEM } from "../type";
 import axios from "axios";
 import { SIGNUP_URL, SIGNIN_URL, REFRESH_TOKEN_URL, FIREBASE_URL } from '../../util/misc';
 
@@ -54,7 +54,7 @@ export function signIn(data) {
     }
 }
 
-export function autoSignIn(refToken) {
+export const autoSignIn = (refToken) => {
     const request = axios({
         method: "POST",
         url: REFRESH_TOKEN_URL,
@@ -93,6 +93,30 @@ export function getUserItems(UID) {
     return {
         type: GET_USER_ITEMS,
         payload: request
+    }
+}
+
+export const deleteUserItem = (itemId, UDATA) => {
+
+    const promise = new Promise((resolve, reject) => {
+
+        const URL = `${FIREBASE_URL}/items/${itemId}.json`
+
+        const request = axios({
+            method: 'DELETE',
+            url: `${URL}?auth=${UDATA.token}`
+        }).then(response => {
+            resolve({
+                deleteItem: true
+            })
+        }).catch(e => {
+
+        })
+    })
+
+    return {
+        type: DELETE_USER_ITEM,
+        payload: promise
     }
 }
 

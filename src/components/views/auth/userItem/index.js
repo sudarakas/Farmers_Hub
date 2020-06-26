@@ -5,7 +5,7 @@ import Modal from 'react-native-modal';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { getUserItems } from "../../../store/actions/user_actions"
+import { getUserItems, deleteUserItem } from "../../../store/actions/user_actions"
 
 class UserItems extends Component {
 
@@ -23,8 +23,8 @@ class UserItems extends Component {
 
     componentDidMount() {
         const UID = this.props.User.userData.uid;
-        const po = this.props.getUserItems(UID);
-        console.log(UID)
+        this.props.getUserItems(UID);
+        // console.log(UID)
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -40,12 +40,27 @@ class UserItems extends Component {
         this.setState({ setModalVisible: false })
     };
 
+    //confirm message to the user
     confirmDelete = (productId) => {
         this.setState({
             setModalVisible: true,
             deleteProduct: productId
         })
     };
+
+    //delete user item
+    deleteItem = (itemId) => {
+        //pass the itemId and user token to the deleteUserItem function
+        this.props.deleteUserItem(itemId, this.props.User.userData).then(() => {
+            const UID = this.props.User.userData.uid;
+            this.props.getUserItems(UID);
+
+            this.setState({
+                setModalVisible: false,
+                deleteProduct: ''
+            })
+        });
+    }
 
     showUserItems = (items) => (
         items ?
@@ -106,7 +121,7 @@ class UserItems extends Component {
                                         <Text style={styles.bottomText}>You won't be able to undo this action.</Text>
                                         <TouchableOpacity
                                             style={styles.deleteConfirmButton}
-                                            onPress={() => alert('don')}
+                                            onPress={() => this.deleteItem(this.state.deleteProduct)}
                                         >
                                             <Text style={styles.deleteConfirmButtonText}>Delete Product</Text>
                                         </TouchableOpacity>
@@ -245,7 +260,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ getUserItems }, dispatch)
+    return bindActionCreators({ getUserItems, deleteUserItem }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserItems);
