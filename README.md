@@ -15,7 +15,7 @@
 - [x] Sort by Category
 - [x] Not Found Page
 - [x] Configure Firestore
-- [ ] Network Check
+- [ ] Network Check   **app crashed**
 - [x] Add Item
 - [x] Add Item Form Validation
 - [x] Redirect User to Product Page
