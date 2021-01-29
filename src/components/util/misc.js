@@ -27,7 +27,7 @@ export const getPlatform = () => {
 }
 
 //firebase authentication
-export const APIKEY = `AIzaSyA89OZJuk8YYHt1Y26bgNrMRhapKnRnEu4`
+export const APIKEY = `ADD API KEY`
 export const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${APIKEY}`
 export const SIGNIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${APIKEY}`
 export const REFRESH_TOKEN_URL = `https://securetoken.googleapis.com/v1/token?key=${APIKEY}`;
